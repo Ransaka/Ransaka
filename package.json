@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "retype start --port 3000",
+    "build": "retype build"
+  },
+  "dependencies": {
+    "retypeapp": "^3.5.0"
+  }
+}
