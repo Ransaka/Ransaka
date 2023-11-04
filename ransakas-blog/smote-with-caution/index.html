@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.5.0.752429823680">
+
+    <!-- See retype.com -->
+    <meta name="generator" content="Retype 3.5.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Use SMOTE with Caution</title>
+    <meta name="title" content="Use SMOTE with Caution">
+    <meta name="description" content="If you are a machine learning practitioner, you may face class imbalance problems more often.">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="/ransakas-blog/smote-with-caution/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/ransakas-blog/smote-with-caution/">
+    <meta property="og:title" content="Use SMOTE with Caution">
+    <meta property="og:description" content="If you are a machine learning practitioner, you may face class imbalance problems more often.">
+    <meta property="og:image" content="/images/smote-with-caution/output_4_0.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="/ransakas-blog/smote-with-caution/">
+    <meta property="twitter:title" content="Use SMOTE with Caution">
+    <meta property="twitter:description" content="If you are a machine learning practitioner, you may face class imbalance problems more often.">
+    <meta property="twitter:image" content="/images/smote-with-caution/output_4_0.png">
+
+    <script data-cfasync="false">(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
+
+    <link href="../../resources/css/retype.css?v=3.5.0.752429823680" rel="stylesheet">
+
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.5.0.752429823680" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/retype.js?v=3.5.0" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.5.0.752429823680" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.5.0.752429823680" defer></script>
+    <link href="../../resources/css/katex.css?v=3.5.0" rel="stylesheet">
+    <script id="katex-js" data-cfasync="false" src="../../resources/js/katex.js?v=3.5.0" defer></script>
+</head>
+<body>
+    <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
+        <div class="absolute bottom-0 left-0 bg-gray-100 dark:bg-dark-800" style="top: 5rem; right: 50%"></div>
+    
+        <header id="docs-site-header" class="sticky top-0 z-30 flex w-full h-16 bg-white border-b border-gray-200 md:h-20 dark:bg-dark-850 dark:border-dark-650">
+            <div class="container relative flex items-center justify-between pr-6 grow md:justify-start">
+                <!-- Mobile menu button skeleton -->
+                <button v-cloak class="skeleton docs-mobile-menu-button flex items-center justify-center shrink-0 overflow-hidden dark:text-white focus:outline-none rounded-full w-10 h-10 ml-3.5 md:hidden"><svg xmlns="http://www.w3.org/2000/svg" class="mb-px shrink-0" width="24" height="24" viewBox="0 0 24 24" role="presentation" style="margin-bottom: 0px;"><g fill="currentColor"><path d="M2 4h20v2H2zM2 11h20v2H2zM2 18h20v2H2z"></path></g></svg></button>
+                <div v-cloak id="docs-sidebar-toggle"></div>
+        
+                <!-- Logo -->
+                <div class="flex items-center justify-between h-full py-2 md:w-75">
+                    <div class="flex items-center px-2 md:px-6">
+                        <a id="docs-site-logo" href="../../" class="flex items-center leading-snug text-xl">
+                            <span class="w-10 mr-2 grow-0 shrink-0 overflow-hidden">
+                                <img class="max-h-10 dark:hidden md:inline-block" src="../../images/blog/age_dist.png">
+                                <img class="max-h-10 hidden dark:inline-block" src="../../images/blog/age_dist.png">
+                            </span>
+                            <span class="dark:text-white font-semibold line-clamp-1 md:line-clamp-2">Ransaka&#x27;s Blog</span>
+                        </a>
+                    </div>
+        
+                    <span class="hidden h-8 border-r md:inline-block dark:border-dark-650"></span>
+                </div>
+        
+                <div class="flex justify-between md:grow">
+                    <!-- Top Nav -->
+                    <nav class="hidden md:flex">
+                        <ul class="flex flex-col mb-4 md:pl-16 md:mb-0 md:flex-row md:items-center">
+                            
+                        </ul>
+                    </nav>
+        
+                    <!-- Header Right Skeleton -->
+                    <div v-cloak class="flex justify-end grow skeleton">
+        
+                        <!-- Search input mock -->
+                        <div class="relative hidden w-40 lg:block lg:max-w-sm lg:ml-auto">
+                            <div class="absolute flex items-center justify-center h-full pl-3 dark:text-dark-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-base" width="16" height="16" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation" style="margin-bottom: 1px;"><g fill="currentColor" ><path d="M21.71 20.29l-3.68-3.68A8.963 8.963 0 0020 11c0-4.96-4.04-9-9-9s-9 4.04-9 9 4.04 9 9 9c2.12 0 4.07-.74 5.61-1.97l3.68 3.68c.2.19.45.29.71.29s.51-.1.71-.29c.39-.39.39-1.03 0-1.42zM4 11c0-3.86 3.14-7 7-7s7 3.14 7 7c0 1.92-.78 3.66-2.04 4.93-.01.01-.02.01-.02.01-.01.01-.01.01-.01.02A6.98 6.98 0 0111 18c-3.86 0-7-3.14-7-7z" ></path></g></svg>
+                            </div>
+                            <input class="w-full h-10 placeholder-gray-400 transition-colors duration-200 ease-in bg-gray-200 border border-transparent rounded md:text-sm hover:bg-white hover:border-gray-300 focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-dark-600 dark:border-dark-600 dark:placeholder-dark-400" style="padding: 0.625rem 0.75rem 0.625rem 2rem" type="text" placeholder="Search">
+                        </div>
+        
+                        <!-- Mobile search button -->
+                        <div class="flex items-center justify-center w-10 h-10 lg:hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="shrink-0 icon-base" width="20" height="20" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation" style="margin-bottom: 0px;"><g fill="currentColor" ><path d="M21.71 20.29l-3.68-3.68A8.963 8.963 0 0020 11c0-4.96-4.04-9-9-9s-9 4.04-9 9 4.04 9 9 9c2.12 0 4.07-.74 5.61-1.97l3.68 3.68c.2.19.45.29.71.29s.51-.1.71-.29c.39-.39.39-1.03 0-1.42zM4 11c0-3.86 3.14-7 7-7s7 3.14 7 7c0 1.92-.78 3.66-2.04 4.93-.01.01-.02.01-.02.01-.01.01-.01.01-.01.02A6.98 6.98 0 0111 18c-3.86 0-7-3.14-7-7z" ></path></g></svg>
+                        </div>
+        
+                        <!-- Dark mode switch placeholder -->
+                        <div class="w-10 h-10 lg:ml-2"></div>
+        
+                        <!-- History button -->
+                        <div class="flex items-center justify-center w-10 h-10" style="margin-right: -0.625rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="shrink-0 icon-base" width="22" height="22" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation" style="margin-bottom: 0px;"><g fill="currentColor" ><g ><path d="M12.01 6.01c-.55 0-1 .45-1 1V12a1 1 0 00.4.8l3 2.22a.985.985 0 001.39-.2.996.996 0 00-.21-1.4l-2.6-1.92V7.01c.02-.55-.43-1-.98-1z"></path><path d="M12.01 1.91c-5.33 0-9.69 4.16-10.05 9.4l-.29-.26a.997.997 0 10-1.34 1.48l1.97 1.79c.19.17.43.26.67.26s.48-.09.67-.26l1.97-1.79a.997.997 0 10-1.34-1.48l-.31.28c.34-4.14 3.82-7.41 8.05-7.41 4.46 0 8.08 3.63 8.08 8.09s-3.63 8.08-8.08 8.08c-2.18 0-4.22-.85-5.75-2.4a.996.996 0 10-1.42 1.4 10.02 10.02 0 007.17 2.99c5.56 0 10.08-4.52 10.08-10.08.01-5.56-4.52-10.09-10.08-10.09z"></path></g></g></svg>
+                        </div>
+                    </div>
+        
+                    <div v-cloak class="flex justify-end grow">
+                        <div id="docs-mobile-search-button"></div>
+                        <doc-search-desktop></doc-search-desktop>
+        
+                        <doc-theme-switch class="lg:ml-2"></doc-theme-switch>
+                        <doc-history></doc-history>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+        <div class="container relative flex bg-white">
+            <!-- Sidebar Skeleton -->
+            <div v-cloak class="fixed flex flex-col shrink-0 duration-300 ease-in-out bg-gray-100 border-gray-200 sidebar top-20 w-75 border-r h-screen md:sticky transition-transform skeleton dark:bg-dark-800 dark:border-dark-650">
+            
+                <!-- Render this div, if config.showSidebarFilter is `true` -->
+                <div class="flex items-center h-16 px-6">
+                    <input class="w-full h-8 px-3 py-2 transition-colors duration-200 ease-linear bg-white border border-gray-200 rounded shadow-none text-sm focus:outline-none focus:border-gray-600 dark:bg-dark-600 dark:border-dark-600" type="text" placeholder="Filter">
+                </div>
+            
+                <div class="pl-6 mt-1 mb-4">
+                    <div class="w-32 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-48 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-40 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-32 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-48 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-40 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                </div>
+            
+                <div class="shrink-0 mt-auto bg-transparent dark:border-dark-650">
+                    <a class="flex items-center justify-center flex-nowrap h-16 text-gray-400 dark:text-dark-400 hover:text-gray-700 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by" target="_blank" href="https://retype.com/" rel="noopener">
+                        <span class="text-xs whitespace-nowrap">Powered by</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Sidebar component -->
+            <doc-sidebar v-cloak>
+                <template #sidebar-footer>
+                    <div class="shrink-0 mt-auto border-t md:bg-transparent md:border-none dark:border-dark-650">
+            
+                        <a class="flex items-center justify-center flex-nowrap h-16 text-gray-400 dark:text-dark-400 hover:text-gray-700 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by" target="_blank" href="https://retype.com/" rel="noopener">
+                            <span class="text-xs whitespace-nowrap">Powered by</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+                        </a>
+                    </div>
+                </template>
+            </doc-sidebar>
+    
+            <div class="grow min-w-0 dark:bg-dark-850">
+                <!-- Render "toolbar" template here on api pages --><!-- Render page content -->
+                <div class="flex">
+                    <div class="min-w-0 p-4 grow md:px-16">
+                        <main class="relative pb-12 lg:pt-2">
+                            <div class="docs-markdown" id="docs-content">
+                                <!-- Rendered if sidebar right is enabled -->
+                                <div id="docs-sidebar-right-toggle"></div>
+                                <!-- Page content  -->
+<doc-anchor-target id="use-smote-with-caution" class="break-words">
+    <h1>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#use-smote-with-caution">#</doc-anchor-trigger>
+        <span>Use SMOTE with Caution</span>
+    </h1>
+</doc-anchor-target>
+<p>If you are a machine learning practitioner, you may face class imbalance problems more often. Class imbalance happens when there is a different class distribution in the dataset. Let&#x27;s take an example. Assume we are working on a churn problem. In this specific scenario, our minor and majority classes are customer churn, and the customer stays with the current service provider. But if you explore this problem more, you will notice fewer customers for the churn category because customer churn is an infrequent event that is good for business but not for the model. As a result, if we feed this dataset into the model, it will learn the majority pattern (non-churn scenario) more accurately than the minor scenario. This is where our problem begins.</p>
+<doc-anchor-target id="how-to-deal-with-class-imbalance-in-machine-learning">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#how-to-deal-with-class-imbalance-in-machine-learning">#</doc-anchor-trigger>
+        <span>How to deal with class imbalance in machine learning?</span>
+    </h2>
+</doc-anchor-target>
+<p>The most obvious answer is since model interaction with the minor class during training is less, we can improve that by adding more minor classes to the model. But how? We have a few methods,</p>
+<ol>
+<li>Collecting more data for the minor class — This is a theoretically easy and practically infeasible solution. Because it&#x27;s hard to do this while covering the business&#x27;s actual needs, as an example, we may have to change the logic to get more customers into the churn category.</li>
+<li>Random Oversampling — We can duplicate minor classes till we get a decent class distribution. It may result in the model learning inaccurate churn scenarios. In simple words, it will over-learn little incident patterns.</li>
+<li>Random Undersampling — We can remove the samples from the majority classes to balance the dataset. However, it will remove some signals from the dataset. Also, if our dataset is highly imbalanced (minor samples are less than 1%), we may have to remove significant majority class samples from our dataset to make it more balanced.</li>
+<li>We can generate synthetic data — We will focus on this more deeply in this article,</li>
+</ol>
+<doc-anchor-target id="generating-synthetic-data-for-rebalance-the-dataset">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#generating-synthetic-data-for-rebalance-the-dataset">#</doc-anchor-trigger>
+        <span>Generating synthetic data for rebalance the dataset</span>
+    </h3>
+</doc-anchor-target>
+<p>The basic idea behind this is to generate more minor class samples similar to the existing ones in the minority class. But unlike repeating minor class instances multiple times, this will generate new minor class instances based on the dataset we have. For that SMOTE (Synthetic Minority Oversampling Technique) method is commonly used. But there are many alternatives for that, such as,</p>
+<p>ADASYN (Adaptive Synthetic Sampling)
+Tomek Links: This technique removes samples from the majority class that are very close to examples in the minority class. The idea is to remove easy cases from the majority class that will likely be misclassified as the minority class.
+Near Miss: This technique selects samples from the majority classes closest in feature space to examples in the minority class and removes them from the dataset. The idea is similar to Tomek Links, but instead of eliminating easy cases from the majority class, it removes samples most likely to be misclassified as the minority class.
+Let&#x27;s do some experiments around SMOTE.</p>
+<p>First, import the dataset. Here I am using a <em><strong>Wine Quality</strong></em>, and you can access the dataset using this link. Let&#x27;s load the dataset and plot the class distribution.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import warnings
+from sklearn import model_selection
+
+warnings.filterwarnings('ignore')
+
+#reading the dataset
+data = np.load('x20data.npz')
+
+df = pd.DataFrame(data['data'])
+df['target'] = data['label']
+df['target'] = df['target'].replace(-1,0)
+
+df['target']\
+.value_counts(normalize=True)\
+.plot\
+.bar(figsize=(10,6),alpha=0.6)
+
+plt.xlabel(&quot;Label&quot;)
+plt.ylabel(&quot;Distribution %&quot;)
+plt.yticks(list(np.linspace(0,1,11)))
+plt.grid(True)
+plt.show()</code></pre>
+</doc-codeblock></div>
+<p><figure class="content-center">
+    <img src="../../images/smote-with-caution/output_4_0.png" alt="png">
+    <figcaption class="caption">png</figcaption>
+</figure>
+</p>
+<p>Now we can use the imblearn library to perform SMOTE on our dataset. In the below code, we will do SMOTE on our dataset and plot both the original and resamples versions of the dataset.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">#keep holdout dataset for evaluation purpose
+df,df_holdout = model_selection.train_test_split(df,stratify=df['target'])
+
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
+from imblearn.over_sampling import SMOTE
+
+# Set the font family for matplotlib
+plt.rcParams['font.family'] = 'Verdana'
+
+# Split your data into features and labels
+X = df.drop('target', axis=1)
+y = df['target']
+
+# Define the SMOTE resampling method
+smote = SMOTE(random_state=42)
+
+# Resample the data using SMOTE
+X_resampled, y_resampled = smote.fit_resample(X, y)
+
+# Use TSNE for dimensionalilty reduction
+X_tsne = TSNE(n_components=2).fit_transform(X)
+X_resampled_tsne = TSNE(n_components=2).fit_transform(X_resampled)
+
+# Get the class ratios
+original_class_ratio = np.bincount(y) / len(y)
+resampled_class_ratio = np.bincount(y_resampled) / len(y_resampled)
+
+# Create subplots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+
+# Plot the original data
+ax1.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y, cmap='rainbow',alpha=0.4)
+ax1.set_title(f'Original Data\nClass Ratio: {original_class_ratio[1] * 100:.1f} : {original_class_ratio[0] * 100:.1f}')
+
+# Plot the resampled data
+ax2.scatter(X_resampled_tsne[:, 0], X_resampled_tsne[:, 1], c=y_resampled, cmap='rainbow',alpha=0.4)
+ax2.set_title(f'Resampled Data\nClass Ratio: {resampled_class_ratio[1] * 100:.0f} : {resampled_class_ratio[0] * 100:.0f}')
+
+plt.show()</code></pre>
+</doc-codeblock></div>
+<p><figure class="content-center">
+    <img src="../../images/smote-with-caution/output_6_1.png" alt="png">
+    <figcaption class="caption">png</figcaption>
+</figure>
+</p>
+<p>As you can see in the plots, we have converted 220 original minor incidents into 2152, its ~9x increase. That&#x27;s where the problem lies. Let&#x27;s focus on our specific churn problem.</p>
+<ol>
+<li>Generating such fake customer data can lead the model to learn patterns that do not exist in the real world.</li>
+<li>In most cases, we have quality issues in the dataset. As a result, there is a high chance of adding noises into datasets. Generating new data using noisy data is a bad idea.</li>
+</ol>
+<p>With these potential issues, we have the below question in front.</p>
+<p><strong>Are we gonna deploy these models into production?</strong></p>
+<p>If it&#x27;s a churn or fraud detection problem, I will not deploy it on production. But the answer to the above question highly depends on the data and business problem we are working on. Generally, it&#x27;s not a good idea to rely on SMOTE when data is noisy, and the problem is complex.</p>
+<p>Let&#x27;s build a classifier using oversampled data and evaluate the model.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">import pandas as pd
+import xgboost as xgb
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve, ConfusionMatrixDisplay
+
+def plot_confusion_matrix_and_roc(model,df):
+    # Make predictions on the holdout set
+    
+    X,y = df.drop('target',axis=1), df['target']
+    
+    y_pred = model.predict(X)
+    
+    # Create the confusion matrix
+    cm = confusion_matrix(y, y_pred)
+    
+    # Calculate the AUC ROC score
+    auc = roc_auc_score(y, y_pred)
+    
+    # Get the FPR and TPR for the ROC curve
+    fpr, tpr, thresholds = roc_curve(y, y_pred)
+    
+    # Create a figure with two subplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+    
+    # Plot the confusion matrix
+    ax1.matshow(cm, cmap='Blues')
+    ax1.set_title('Confusion Matrix')
+    ax1.set_xlabel('Predicted')
+    ax1.set_ylabel('Actual')
+    
+        # Add labels to the confusion matrix
+    # for i in range(cm.shape[0]):
+    #     for j in range(cm.shape[1]):
+    #         ax1.text(j, i, f'{cm[i, j]:n}', ha='center', va='center')
+            
+    # Add labels for the TP, FP, TN, and FN cells
+    ax1.text(0, 0, f'TN: {cm[0, 0]:n}', ha='center', va='center', color='w')
+    ax1.text(0, 1, f'FN: {cm[1, 0]:n}', ha='center', va='center', color='k')
+    ax1.text(1, 0, f'FP: {cm[0, 1]:n}', ha='center', va='center', color='k')
+    ax1.text(1, 1, f'TP: {cm[1, 1]:n}', ha='center', va='center', color='k')
+    
+    # Plot the ROC curve
+    ax2.plot(fpr, tpr, label='AUC ROC = %0.2f' % auc)
+    ax2.plot([0, 1], [0, 1], 'k--')
+    ax2.set_title('ROC Curve')
+    ax2.set_xlabel('FPR')
+    ax2.set_ylabel('TPR')
+    ax2.legend()
+    
+    plt.show()
+
+#let's train the model
+from xgboost import XGBClassifier
+
+model = XGBClassifier()
+model.fit(X_resampled,y_resampled)
+
+#plot the model performance
+plot_confusion_matrix_and_roc(model,df_holdout)</code></pre>
+</doc-codeblock></div>
+<p><figure class="content-center">
+    <img src="../../images/smote-with-caution/output_8_1.png" alt="png">
+    <figcaption class="caption">png</figcaption>
+</figure>
+</p>
+<p>Now it&#x27;s time to experiment with other approaches for class imbalance. Below I have explained a few methods I have used to tackle imbalance problems.</p>
+<ol>
+<li>Use class weights</li>
+<li>Change evaluation metrics</li>
+<li>Create more features by doing error analysis for the model</li>
+<li>Use an unsupervised algorithm to detect clusters of the dataset.</li>
+</ol>
+<p>Let&#x27;s dive deep into these methods.</p>
+<p>Let&#x27;s dive deep into these methods.</p>
+<doc-anchor-target id="use-class-weights">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#use-class-weights">#</doc-anchor-trigger>
+        <span><em>Use class weights</em></span>
+    </h3>
+</doc-anchor-target>
+<p>When training a model on a dataset with class imbalance, the loss function may be dominated by the majority class because it has more instances. It can cause the model to pay more attention to the majority class than the minority class. The main idea of class weights is assigning weights for each sample based on its class. It will give more weight to the minority class during training. Meaning the model will pay more attention to the minority class during training in an effort to improve its performance in that class.</p>
+<hr>
+<p><em>In advance, class weights can be used to balance the loss function by assigning higher weights to the minority class, so that it has a greater impact on the loss function. This can help the model to better learn the characteristics of the minority class and improve its performance on it.</em></p>
+<hr>
+<p>Mathematically, class weights are typically incorporated into the loss function by multiplying the loss for each example by the weight for its class. For example, suppose we have a dataset with two classes (0 and 1) and the following class weights:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">class_weights = {0: 1, 1: 10}</code></pre>
+</doc-codeblock></div>
+<p>The loss function for a binary classification model might be defined as follows:</p>
+<div class="math"><pre>\text{loss}(y, y_{pred}) = -(y * \log(y_{pred}) + (1 - y) * \log(1 - y_{pred}))</pre></div>
+<p>To incorporate class weights into this loss function, we can modify it as follows:</p>
+<p><figure class="content-center">
+    <img src="../../images/smote-with-caution/cross-entropy-with-weights.webp" alt="">
+    <figcaption class="caption"></figcaption>
+</figure>
+</p>
+<p>Now, when the model is trained, the loss for each example will be multiplied by the class weight for its class. It will cause the model to pay more attention to the minority class since its samples will significantly impact the loss function.</p>
+<p>In most major machine learning model accept sample_weight parameter. Here is an example how you can do this with XGBoost library.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python"># this will compute sample weight for us
+from sklearn.utils import compute_sample_weight
+
+#coputing class weights, this will be (num_samples_in_y,)
+sample_weights = compute_sample_weight(class_weight='balanced',y=y)
+
+model = XGBClassifier()
+
+# just plug sample weight parameter into your model
+model.fit(X,y,sample_weight=sample_weights)</code></pre>
+</doc-codeblock></div>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-none"><code v-pre class="language-none">[11:40:26] WARNING: ../src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective 'binary:logistic' was changed from 'error' to 'logloss'. Explicitly set eval_metric if you'd like to restore the old behavior.
+
+
+
+
+
+XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+              colsample_bynode=1, colsample_bytree=1, enable_categorical=False,
+              gamma=0, gpu_id=-1, importance_type=None,
+              interaction_constraints='', learning_rate=0.300000012,
+              max_delta_step=0, max_depth=6, min_child_weight=1, missing=nan,
+              monotone_constraints='()', n_estimators=100, n_jobs=4,
+              num_parallel_tree=1, predictor='auto', random_state=0,
+              reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+              tree_method='exact', validate_parameters=1, verbosity=None)</code></pre>
+</doc-codeblock></div>
+<p>One thing to notice here is that sample weights can potentially lead to overfitting if the weights are too high. It&#x27;s generally a good idea to try a range of weights and see which gives the best performance on the validation set.</p>
+<p>Alternatively, we can use the scale_pos_weight parameter in XGBoost as well. It will give you similar results.</p>
+<p>Let&#x27;s quickly plot the above model performance.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">plot_confusion_matrix_and_roc(model,df_holdout)</code></pre>
+</doc-codeblock></div>
+<p><figure class="content-center">
+    <img src="../../images/smote-with-caution/output_14_0.png" alt="png">
+    <figcaption class="caption">png</figcaption>
+</figure>
+</p>
+<p>If you check the confusion matrix for the above two scenarios. In that case, you will notice high false positives in the oversampled scenario. We have fewer false positive predictions using class weights. It also reduced our true positives as well. So we have to tweak our approaches based on real business needs.</p>
+<doc-anchor-target id="change-evaluation-metrics">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#change-evaluation-metrics">#</doc-anchor-trigger>
+        <span><em>Change evaluation metrics</em></span>
+    </h3>
+</doc-anchor-target>
+<p>Most libraries use Accuracy as the default evaluation metric for classification tasks. It&#x27;s okay for balanced problems. But imbalanced problems will lead the model to guess the majority class without learning any potential signals.</p>
+<p>For example, say we have 97 non-churn customers and 3 churn customers. If we are building a model used accuracy as an evaluation metric, it can achieve 97% accuracy by blindly predicting non-churn class for every 100 samples. As an easy fix, we can change the evaluation metric into something different. Precision, Recall, F1 Score, and Balanced Accuracy are a few best options for the imbalance classification task.</p>
+<doc-anchor-target id="create-more-features-by-doing-error-analysis-for-the-model">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#create-more-features-by-doing-error-analysis-for-the-model">#</doc-anchor-trigger>
+        <span><em>Create more features by doing error analysis for the model</em></span>
+    </h3>
+</doc-anchor-target>
+<p>When your model performs poorly, we can use error analysis to find different data segments with varying performance levels. Let&#x27;s take the previous churn example; we can find the model&#x27;s error vs. customers&#x27; revenue bucket and identify revenue segments where the model is good and evil. Likewise, we can create an error analysis report with this information. After the error analysis report, we can determine possible new features which the model can use to distinguish the churner vs. the non-churner scenarios.</p>
+<p>For example, if you know low revenue users are churning because of the &quot;XYZ&quot; reason, you can add that feature if it&#x27;s not already in the model. Otherwise, you can perform feature engineering methods with that potential feature, such as binning the &quot;XYZ&quot; feature.</p>
+<doc-anchor-target id="use-unsupervised-algorithm-to-detect-clusters-of-the-dataset">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#use-unsupervised-algorithm-to-detect-clusters-of-the-dataset">#</doc-anchor-trigger>
+        <span><em>Use unsupervised algorithm to detect clusters of the dataset</em></span>
+    </h3>
+</doc-anchor-target>
+<p>One of the powerful and popular approaches is segmentation. If we know some features that can be used for segregating data into different subgroups, we can use those features for the clustering model. After clustering, you will note various class imbalances in other groups. There are a few possible scenarios. Such as,</p>
+<ol>
+<li>You may find subgroups only with one class. After verifying this customer behavior, we can further skip modeling for this particular subgroup. It will reduce the imbalance of the whole dataset.</li>
+<li>You may find a somewhat balanced distribution that is easy to model compared to the previous dataset.</li>
+<li>Or, you may find subgroups with a highly imbalanced class distribution. But this is not lousy compared to the original distribution. The reason for this is this imbalance occurs in similar data points and can be a strong signal even though the distribution is imbalanced. For example, if we are working on a disease prediction model, it&#x27;s a good idea to group people into subgroups based on age. If the general class imbalance is 2%, grouping on age will produce different class distributions for different subgroups. In the higher age group, this will be more balanced. In the middle and young age groups, this will be highly imbalanced. Since we are modeling each segment separately, the model can generalize to that particular segment well.</li>
+</ol>
+<hr>
+<doc-anchor-target id="conclusion">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#conclusion">#</doc-anchor-trigger>
+        <span>Conclusion</span>
+    </h2>
+</doc-anchor-target>
+<p>This article aims to show alternatives to treat class imbalance other than synthetic data generation. It&#x27;s worth noting that some methods heavily depend on the data, problem type, and domain you are working on. It&#x27;s always a good idea to experiment with a few different approaches and pick the best one for your problem.</p>
+<p>Please find the citation for the above dataset.</p>
+<p><em>Lemaitre, G., Nogueira, F., Aridas, C. K., &amp; Oliveira, D. V. R. (2016). Imbalanced dataset for benchmarking [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.61452">https://doi.org/10.5281/zenodo.61452</a></em>_</p>
+<p>Thanks for reading.</p>
+
+                                <div class="flex items-center mt-6 mb-6 clear-both">
+                                    <span>
+                                        <a href="../../tags/">
+                                            <svg class="inline-block -mb-px mr-1.5 text-blue-500 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" overflow="visible" fill="currentColor"><g><path d="M21.3 9.88l-8.59-8.59C12.52 1.11 12.27 1 12 1H2c-.55 0-1 .45-1 1v10c0 .27.11.52.29.71l8.59 8.58c.57.57 1.32.88 2.12.88s1.55-.31 2.12-.88l7.17-7.17a3.009 3.009 0 00.01-4.24zm-1.42 2.82l-7.17 7.17c-.39.39-1.02.39-1.42 0L3 11.59V3h8.59l8.29 8.29c.39.39.39 1.03 0 1.41z" /><path d="M7.01 6C6.45 6 6 6.45 6 7s.45 1 1 1 1-.45 1-1-.44-1-.99-1z" /></g></svg>
+                                        </a>
+                                        <span class="mr-2"><a href="../../tags/smote/" class="no-link inline-flex align-middle items-center justify-center font-medium leading-none whitespace-nowrap text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-transparent dark:hover:border-blue-200 dark:hover:text-blue-200 transition-colors duration-200 ease-out h-6 px-2 text-xs rounded-md">
+                                    <span>smote</span>
+                                </a></span>
+                                        <span class="mr-2"><a href="../../tags/classification/" class="no-link inline-flex align-middle items-center justify-center font-medium leading-none whitespace-nowrap text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-transparent dark:hover:border-blue-200 dark:hover:text-blue-200 transition-colors duration-200 ease-out h-6 px-2 text-xs rounded-md">
+                                    <span>classification</span>
+                                </a></span>
+                                        <span class="mr-2"><a href="../../tags/class-imbalance/" class="no-link inline-flex align-middle items-center justify-center font-medium leading-none whitespace-nowrap text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-transparent dark:hover:border-blue-200 dark:hover:text-blue-200 transition-colors duration-200 ease-out h-6 px-2 text-xs rounded-md">
+                                    <span>class imbalance</span>
+                                </a></span>
+                                        <span class="mr-2"><a href="../../tags/machine-learning/" class="no-link inline-flex align-middle items-center justify-center font-medium leading-none whitespace-nowrap text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-transparent dark:hover:border-blue-200 dark:hover:text-blue-200 transition-colors duration-200 ease-out h-6 px-2 text-xs rounded-md">
+                                    <span>machine learning</span>
+                                </a></span>
+                                    </span>
+                                </div>
+                
+                                <!-- Required only on API pages -->
+                                <doc-toolbar-member-filter-no-results></doc-toolbar-member-filter-no-results>
+                            </div>
+                            <footer class="clear-both">
+                            
+                                <nav class="flex mt-14">
+                                    <div class="w-1/2">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../ransakas-blog/machine-learning-on-snowflake/">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+                                            <span>
+                                                <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
+                                                <span class="block mt-1">Machine Learning on Snowflake</span>
+                                            </span>
+                                        </a>
+                                    </div>
+                            
+                                    <div class="w-1/2">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../projects/">
+                                            <span>
+                                                <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
+                                                <span class="block mt-1">Projects</span>
+                                            </span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+                                        </a>
+                                    </div>
+                                </nav>
+                            </footer>
+                        </main>
+                
+                        <div class="border-t dark:border-dark-650 pt-6 mb-8">
+                            <footer class="flex flex-wrap items-center justify-between">
+                                <div>
+                                    <ul class="flex flex-wrap items-center text-sm">
+                                    </ul>
+                                </div>
+                                <div class="docs-copyright py-2 text-gray-500 dark:text-dark-350 text-sm leading-relaxed"><p>© Copyright 2023. All rights reserved.</p></div>
+                            </footer>
+                        </div>
+                    </div>
+                
+                    <!-- Rendered if sidebar right is enabled -->
+                    <!-- Sidebar right skeleton-->
+                    <div v-cloak class="fixed top-0 bottom-0 right-0 translate-x-full bg-white border-gray-200 lg:sticky lg:border-l lg:shrink-0 lg:pt-6 lg:transform-none sm:w-1/2 lg:w-64 lg:z-0 md:w-104 sidebar-right skeleton dark:bg-dark-850 dark:border-dark-650">
+                        <div class="pl-5">
+                            <div class="w-32 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+                            <div class="w-48 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+                            <div class="w-40 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+                        </div>
+                    </div>
+                
+                    <!-- User should be able to hide sidebar right -->
+                    <doc-sidebar-right v-cloak></doc-sidebar-right>
+                </div>
+
+            </div>
+        </div>
+    
+        <doc-search-mobile></doc-search-mobile>
+        <doc-back-to-top></doc-back-to-top>
+    </div>
+
+
+    <div id="docs-overlay-target"></div>
+
+    <script data-cfasync="false">window.__DOCS__ = { "title": "Use SMOTE with Caution", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: true, tocDepth: 23 }</script>
+</body>
+</html>

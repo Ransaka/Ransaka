@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.5.0.752429823680">
+
+    <!-- See retype.com -->
+    <meta name="generator" content="Retype 3.5.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Machine Learning on Snowflake</title>
+    <meta name="title" content="Machine Learning on Snowflake">
+    <meta name="description" content="Snowflake is one of the leading data platforms out there. In this article, we will explore the capabilities of its' snowpark python library.">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="/ransakas-blog/machine-learning-on-snowflake/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/ransakas-blog/machine-learning-on-snowflake/">
+    <meta property="og:title" content="Machine Learning on Snowflake">
+    <meta property="og:description" content="Snowflake is one of the leading data platforms out there. In this article, we will explore the capabilities of its' snowpark python library.">
+    <meta property="og:image" content="/images/ml-on-snowflake/cover.jpeg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="/ransakas-blog/machine-learning-on-snowflake/">
+    <meta property="twitter:title" content="Machine Learning on Snowflake">
+    <meta property="twitter:description" content="Snowflake is one of the leading data platforms out there. In this article, we will explore the capabilities of its' snowpark python library.">
+    <meta property="twitter:image" content="/images/ml-on-snowflake/cover.jpeg">
+
+    <script data-cfasync="false">(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
+
+    <link href="../../resources/css/retype.css?v=3.5.0.752429823680" rel="stylesheet">
+
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.5.0.752429823680" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/retype.js?v=3.5.0" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.5.0.752429823680" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.5.0.752429823680" defer></script>
+</head>
+<body>
+    <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
+        <div class="absolute bottom-0 left-0 bg-gray-100 dark:bg-dark-800" style="top: 5rem; right: 50%"></div>
+    
+        <header id="docs-site-header" class="sticky top-0 z-30 flex w-full h-16 bg-white border-b border-gray-200 md:h-20 dark:bg-dark-850 dark:border-dark-650">
+            <div class="container relative flex items-center justify-between pr-6 grow md:justify-start">
+                <!-- Mobile menu button skeleton -->
+                <button v-cloak class="skeleton docs-mobile-menu-button flex items-center justify-center shrink-0 overflow-hidden dark:text-white focus:outline-none rounded-full w-10 h-10 ml-3.5 md:hidden"><svg xmlns="http://www.w3.org/2000/svg" class="mb-px shrink-0" width="24" height="24" viewBox="0 0 24 24" role="presentation" style="margin-bottom: 0px;"><g fill="currentColor"><path d="M2 4h20v2H2zM2 11h20v2H2zM2 18h20v2H2z"></path></g></svg></button>
+                <div v-cloak id="docs-sidebar-toggle"></div>
+        
+                <!-- Logo -->
+                <div class="flex items-center justify-between h-full py-2 md:w-75">
+                    <div class="flex items-center px-2 md:px-6">
+                        <a id="docs-site-logo" href="../../" class="flex items-center leading-snug text-xl">
+                            <span class="w-10 mr-2 grow-0 shrink-0 overflow-hidden">
+                                <img class="max-h-10 dark:hidden md:inline-block" src="../../images/blog/age_dist.png">
+                                <img class="max-h-10 hidden dark:inline-block" src="../../images/blog/age_dist.png">
+                            </span>
+                            <span class="dark:text-white font-semibold line-clamp-1 md:line-clamp-2">Ransaka&#x27;s Blog</span>
+                        </a>
+                    </div>
+        
+                    <span class="hidden h-8 border-r md:inline-block dark:border-dark-650"></span>
+                </div>
+        
+                <div class="flex justify-between md:grow">
+                    <!-- Top Nav -->
+                    <nav class="hidden md:flex">
+                        <ul class="flex flex-col mb-4 md:pl-16 md:mb-0 md:flex-row md:items-center">
+                            
+                        </ul>
+                    </nav>
+        
+                    <!-- Header Right Skeleton -->
+                    <div v-cloak class="flex justify-end grow skeleton">
+        
+                        <!-- Search input mock -->
+                        <div class="relative hidden w-40 lg:block lg:max-w-sm lg:ml-auto">
+                            <div class="absolute flex items-center justify-center h-full pl-3 dark:text-dark-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-base" width="16" height="16" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation" style="margin-bottom: 1px;"><g fill="currentColor" ><path d="M21.71 20.29l-3.68-3.68A8.963 8.963 0 0020 11c0-4.96-4.04-9-9-9s-9 4.04-9 9 4.04 9 9 9c2.12 0 4.07-.74 5.61-1.97l3.68 3.68c.2.19.45.29.71.29s.51-.1.71-.29c.39-.39.39-1.03 0-1.42zM4 11c0-3.86 3.14-7 7-7s7 3.14 7 7c0 1.92-.78 3.66-2.04 4.93-.01.01-.02.01-.02.01-.01.01-.01.01-.01.02A6.98 6.98 0 0111 18c-3.86 0-7-3.14-7-7z" ></path></g></svg>
+                            </div>
+                            <input class="w-full h-10 placeholder-gray-400 transition-colors duration-200 ease-in bg-gray-200 border border-transparent rounded md:text-sm hover:bg-white hover:border-gray-300 focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-dark-600 dark:border-dark-600 dark:placeholder-dark-400" style="padding: 0.625rem 0.75rem 0.625rem 2rem" type="text" placeholder="Search">
+                        </div>
+        
+                        <!-- Mobile search button -->
+                        <div class="flex items-center justify-center w-10 h-10 lg:hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="shrink-0 icon-base" width="20" height="20" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation" style="margin-bottom: 0px;"><g fill="currentColor" ><path d="M21.71 20.29l-3.68-3.68A8.963 8.963 0 0020 11c0-4.96-4.04-9-9-9s-9 4.04-9 9 4.04 9 9 9c2.12 0 4.07-.74 5.61-1.97l3.68 3.68c.2.19.45.29.71.29s.51-.1.71-.29c.39-.39.39-1.03 0-1.42zM4 11c0-3.86 3.14-7 7-7s7 3.14 7 7c0 1.92-.78 3.66-2.04 4.93-.01.01-.02.01-.02.01-.01.01-.01.01-.01.02A6.98 6.98 0 0111 18c-3.86 0-7-3.14-7-7z" ></path></g></svg>
+                        </div>
+        
+                        <!-- Dark mode switch placeholder -->
+                        <div class="w-10 h-10 lg:ml-2"></div>
+        
+                        <!-- History button -->
+                        <div class="flex items-center justify-center w-10 h-10" style="margin-right: -0.625rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="shrink-0 icon-base" width="22" height="22" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation" style="margin-bottom: 0px;"><g fill="currentColor" ><g ><path d="M12.01 6.01c-.55 0-1 .45-1 1V12a1 1 0 00.4.8l3 2.22a.985.985 0 001.39-.2.996.996 0 00-.21-1.4l-2.6-1.92V7.01c.02-.55-.43-1-.98-1z"></path><path d="M12.01 1.91c-5.33 0-9.69 4.16-10.05 9.4l-.29-.26a.997.997 0 10-1.34 1.48l1.97 1.79c.19.17.43.26.67.26s.48-.09.67-.26l1.97-1.79a.997.997 0 10-1.34-1.48l-.31.28c.34-4.14 3.82-7.41 8.05-7.41 4.46 0 8.08 3.63 8.08 8.09s-3.63 8.08-8.08 8.08c-2.18 0-4.22-.85-5.75-2.4a.996.996 0 10-1.42 1.4 10.02 10.02 0 007.17 2.99c5.56 0 10.08-4.52 10.08-10.08.01-5.56-4.52-10.09-10.08-10.09z"></path></g></g></svg>
+                        </div>
+                    </div>
+        
+                    <div v-cloak class="flex justify-end grow">
+                        <div id="docs-mobile-search-button"></div>
+                        <doc-search-desktop></doc-search-desktop>
+        
+                        <doc-theme-switch class="lg:ml-2"></doc-theme-switch>
+                        <doc-history></doc-history>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+        <div class="container relative flex bg-white">
+            <!-- Sidebar Skeleton -->
+            <div v-cloak class="fixed flex flex-col shrink-0 duration-300 ease-in-out bg-gray-100 border-gray-200 sidebar top-20 w-75 border-r h-screen md:sticky transition-transform skeleton dark:bg-dark-800 dark:border-dark-650">
+            
+                <!-- Render this div, if config.showSidebarFilter is `true` -->
+                <div class="flex items-center h-16 px-6">
+                    <input class="w-full h-8 px-3 py-2 transition-colors duration-200 ease-linear bg-white border border-gray-200 rounded shadow-none text-sm focus:outline-none focus:border-gray-600 dark:bg-dark-600 dark:border-dark-600" type="text" placeholder="Filter">
+                </div>
+            
+                <div class="pl-6 mt-1 mb-4">
+                    <div class="w-32 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-48 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-40 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-32 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-48 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-40 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                </div>
+            
+                <div class="shrink-0 mt-auto bg-transparent dark:border-dark-650">
+                    <a class="flex items-center justify-center flex-nowrap h-16 text-gray-400 dark:text-dark-400 hover:text-gray-700 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by" target="_blank" href="https://retype.com/" rel="noopener">
+                        <span class="text-xs whitespace-nowrap">Powered by</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Sidebar component -->
+            <doc-sidebar v-cloak>
+                <template #sidebar-footer>
+                    <div class="shrink-0 mt-auto border-t md:bg-transparent md:border-none dark:border-dark-650">
+            
+                        <a class="flex items-center justify-center flex-nowrap h-16 text-gray-400 dark:text-dark-400 hover:text-gray-700 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by" target="_blank" href="https://retype.com/" rel="noopener">
+                            <span class="text-xs whitespace-nowrap">Powered by</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+                        </a>
+                    </div>
+                </template>
+            </doc-sidebar>
+    
+            <div class="grow min-w-0 dark:bg-dark-850">
+                <!-- Render "toolbar" template here on api pages --><!-- Render page content -->
+                <div class="flex">
+                    <div class="min-w-0 p-4 grow md:px-16">
+                        <main class="relative pb-12 lg:pt-2">
+                            <div class="docs-markdown" id="docs-content">
+                                <!-- Rendered if sidebar right is enabled -->
+                                <div id="docs-sidebar-right-toggle"></div>
+                                <!-- Page content  -->
+<doc-anchor-target id="machine-learning-on-snowflake" class="break-words">
+    <h1>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#machine-learning-on-snowflake">#</doc-anchor-trigger>
+        <span>Machine Learning on Snowflake</span>
+    </h1>
+</doc-anchor-target>
+<blockquote>
+<p>Snowflake is one of the leading data platforms out there. In this article, we will explore the capabilities of its&#x27; snowpark python library.</p>
+</blockquote>
+<p><figure class="content-center">
+    <img src="../../images/ml-on-snowflake/cover.jpeg" alt="Photo by Colin Lloyd on Unsplash">
+    <figcaption class="caption">Photo by Colin Lloyd on Unsplash</figcaption>
+</figure>
+</p>
+<p>Throughout this article, you will learn how to use,</p>
+<ul>
+<li>snowpark-python functionalities for primary data preprocessing</li>
+<li>Train and deploy machine learning models in Snowflake</li>
+</ul>
+<p>Define UDFs in a pythonic way and deploy them in snowflake
+<figure class="content-center">
+    <img src="../../images/ml-on-snowflake/overview.png" alt="Topics covered in this article">
+    <figcaption class="caption">Topics covered in this article</figcaption>
+</figure>
+</p>
+<p>If you are willing to follow along with the tutorial, you should have an Anaconda integration-enabled snowflake account. Otherwise, you must sign up for a free snowflake trial account and configure it as described here.
+At first glance, snowpark is a machine learning and data science framework that offers the power of SQL within Python flexibility. Sometimes, this is similar to the Apache spark framework. However, this provides a pervasive framework for our machine learning and data science projects. Before trying anything in this article, you should establish a connection between python and Snowflake. You can refer to my code repo for code samples. Let&#x27;s create a database connection.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">from snowflake.snowpark.session import Session
+
+accountname = &quot;********&quot; # your accountname
+username = &quot;**********&quot; #your snowflake username
+password = &quot;*************&quot; #snowflake password
+
+connection_parameters = {
+    &quot;account&quot;: accountname,
+    &quot;user&quot;: username,
+    &quot;password&quot;: password,
+    &quot;role&quot;: &quot;ACCOUNTADMIN&quot;
+}
+
+def snowflake_connector():
+    try:
+        session = Session.builder.configs(connection_parameters).create()
+        print(&quot;connection successful!&quot;)
+    except:
+        raise ValueError(&quot;error while connecting with db&quot;)
+    return session
+
+#define a session
+session = snowflake_connector()</code></pre>
+</doc-codeblock></div>
+<p>Now we can start the primary data preprocessing part. Instead of preprocessing with Pandas DataFrame, I will do this with the snowpark side. Here I&#x27;m going to use the COVID-19 Dataset, which is available in the Kaggle under CC0: Public Domain. I have already loaded this Dataset as a Snowflake table. Since it&#x27;s not the primary goal of this article, I&#x27;m skipping that part. You can load the Dataset as described in this article&#x27;s GitHub repo. Let&#x27;s read the table.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">snowpark_df = session.table(&quot;COVID19_RECORDS&quot;)
+
+print(type(snowpark_df) # snowflake.snowpark.table.Table
+print(f&quot;Size of the table object: {(sys.getsizeof(snowpark_df)/1e6)} MB&quot;)
+#'Size of the table object: 4.8e-05 MB'</code></pre>
+</doc-codeblock></div>
+<p>Above snowpark_df is a lazily-evaluated table; hence It won&#x27;t consume much memory like pandas data frames. But we can apply any transformations aggregations and much more as we did with pandas.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">snowpark_df.schema.fields
+
+# [StructField('USMER', LongType(), nullable=True),
+#  StructField('MEDICAL_UNIT', LongType(), nullable=True),
+#  StructField('SEX', LongType(), nullable=True),
+#  StructField('PATIENT_TYPE', LongType(), nullable=True),
+#  StructField('DATE_DIED', StringType(), nullable=True),
+#  StructField('INTUBED', LongType(), nullable=True),
+#  StructField('PNEUMONIA', LongType(), nullable=True),
+#  StructField('AGE', LongType(), nullable=True),
+#  StructField('PREGNANT', LongType(), nullable=True),
+#  StructField('DIABETES', LongType(), nullable=True),
+#  StructField('COPD', LongType(), nullable=True),
+#  StructField('ASTHMA', LongType(), nullable=True),
+#  StructField('INMSUPR', LongType(), nullable=True),
+#  StructField('HIPERTENSION', LongType(), nullable=True),
+#  StructField('OTHER_DISEASE', LongType(), nullable=True),
+#  StructField('CARDIOVASCULAR', LongType(), nullable=True),
+#  StructField('OBESITY', LongType(), nullable=True),
+#  StructField('RENAL_CHRONIC', LongType(), nullable=True),
+#  StructField('TOBACCO', LongType(), nullable=True),
+#  StructField('CLASIFFICATION_FINAL', LongType(), nullable=True),
+#  StructField('ICU', LongType(), nullable=True)]</code></pre>
+</doc-codeblock></div>
+<p>There are 1,048,575 unique records and 21 columns in the Dataset. Let&#x27;s do some fundamental analysis. First, let&#x27;s define the target variable as follow. As per the description of the Dataset, the 1,2 and 3 values in CLASSIFICATION_FINAL the column represent the positive cases, and the rest represent the negative cases. Let&#x27;s define a new column called TARGET by applying the above logic. The equivalent SQL logic will be,</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-sql"><code v-pre class="language-sql">SELECT
+    &quot;USMER&quot;,
+    &quot;MEDICAL_UNIT&quot;,
+    &quot;SEX&quot;,
+    &quot;PATIENT_TYPE&quot;,
+    &quot;DATE_DIED&quot;,
+    &quot;INTUBED&quot;,
+    &quot;PNEUMONIA&quot;,
+    &quot;AGE&quot;,
+    &quot;PREGNANT&quot;,
+    &quot;DIABETES&quot;,
+    &quot;COPD&quot;,
+    &quot;ASTHMA&quot;,
+    &quot;INMSUPR&quot;,
+    &quot;HIPERTENSION&quot;,
+    &quot;OTHER_DISEASE&quot;,
+    &quot;CARDIOVASCULAR&quot;,
+    &quot;OBESITY&quot;,
+    &quot;RENAL_CHRONIC&quot;,
+    &quot;TOBACCO&quot;,
+    &quot;CLASIFFICATION_FINAL&quot;,
+    &quot;ICU&quot;,
+    CASE
+        WHEN (&quot;CLASIFFICATION_FINAL&quot; &lt; 4 :: INT) THEN 1 :: INT
+        ELSE 0 :: INT
+    END AS &quot;TARGET&quot;
+FROM
+    COVID19_RECORDS</code></pre>
+</doc-codeblock></div>
+<p>Since we are working with snowpark API, let&#x27;s create this with snowpark.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">import snowflake.snowpark.functions as F
+
+snowpark_df.with_column('TARGET', F.when(F.col('CLASIFFICATION_FINAL')
+                        &lt; 4, 1).otherwise(0))</code></pre>
+</doc-codeblock></div>
+<p>Let&#x27;s see our target distribution.</p>
+<p><figure class="content-center">
+    <img src="../../images/ml-on-snowflake/target_dist.png" alt="Target distribution">
+    <figcaption class="caption">Target distribution</figcaption>
+</figure>
+</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">snowpark_df\
+.group_by(&quot;TARGET&quot;).count().to_pandas().set_index(&quot;TARGET&quot;)\
+.plot.bar()
+
+plt.title(&quot;Target distribution&quot;,fontweight='semibold')
+plt.show()</code></pre>
+</doc-codeblock></div>
+<p>Let&#x27;s create one more plot.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">snowpark_df\
+.select('AGE').to_pandas()\
+.plot.hist(bins=100,alpha=0.5)
+
+plt.title(&quot;Age distribution&quot;,fontweight='semibold')
+plt.show()</code></pre>
+</doc-codeblock></div>
+<p><figure class="content-center">
+    <img src="../../images/ml-on-snowflake/age_dist.png" alt="Age distribution">
+    <figcaption class="caption">Age distribution</figcaption>
+</figure>
+</p>
+<p>Let&#x27;s find the relationship between the Age variable and the target variable.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">snowpark_df = snowpark_df.with_column(
+    &quot;AGE_BKT&quot;,
+    F.when(F.col(&quot;AGE&quot;) &lt; 21, &quot;YOUNG&quot;).otherwise(
+        F.when(F.col(&quot;AGE&quot;) &lt; 49, &quot;ADULT&quot;).otherwise(&quot;OLD ADULT&quot;)
+    ),
+)
+
+age_bkt_df = snowpark_df.select(
+    F.col(&quot;AGE_BKT&quot;),
+    F.when((F.col(&quot;AGE_BKT&quot;)=='YOUNG') &amp; (F.col(&quot;TARGET&quot;)==1),1).otherwise(0).as_(&quot;YOUNG_&quot;),
+    F.when((F.col(&quot;AGE_BKT&quot;)=='ADULT') &amp; (F.col(&quot;TARGET&quot;)==1),1).otherwise(0).as_(&quot;ADULT_&quot;),
+    F.when((F.col(&quot;AGE_BKT&quot;)=='OLD ADULT') &amp; (F.col(&quot;TARGET&quot;)==1),1).otherwise(0).as_(&quot;OLD_ADULT_&quot;)
+)
+
+age_bkt_df.group_by(F.col(&quot;AGE_BKT&quot;)).count().show()
+
+# -----------------------
+# |&quot;AGE_BKT&quot;  |&quot;COUNT&quot;  |
+# -----------------------
+# |OLD ADULT  |342413   |
+# |ADULT      |628554   |
+# |YOUNG      |77608    |
+# -----------------------
+
+age_bkt_df.select(
+    ((F.sum(&quot;YOUNG_&quot;) * 100 ) / F.count(&quot;YOUNG_&quot;)).as_(&quot;YOUNG % OF CASES&quot;),
+    ((F.sum(&quot;ADULT_&quot;) * 100) / F.count(&quot;ADULT_&quot;)).as_(&quot;ADULT % OF CASES&quot;),
+    ((F.sum(&quot;OLD_ADULT_&quot;) * 100) / F.count(&quot;OLD_ADULT_&quot;)).as_(&quot;OLD_ADULT % OF CASES&quot;)
+).show()
+
+# --------------------------------------------------------------------
+# |&quot;YOUNG % OF CASES&quot;  |&quot;ADULT % OF CASES&quot;  |&quot;OLD_ADULT % OF CASES&quot;  |
+# --------------------------------------------------------------------
+# |1.534463            |20.877858           |14.969745               |
+# --------------------------------------------------------------------</code></pre>
+</doc-codeblock></div>
+<p>After completing our analysis, we can save the transformed Dataset as a new Snowflake table using the following way.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">snowpark_df.write.save_as_table(
+    table_name='COVID19_RECORDS_PROCESSED',
+    mode='overwrite'
+)</code></pre>
+</doc-codeblock></div>
+<p>Alright, now we have preprocessed Dataset. Let&#x27;s start the model training phase.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python"># read the table 
+train_data = session.table(&quot;COVID19_RECORDS_PROCESSED&quot;)
+
+#create the stage for storing the ML models
+session.sql('CREATE OR REPLACE STAGE ML_MODELS').show()</code></pre>
+</doc-codeblock></div>
+<p>We can use two different approaches to train and deploy models in Snowflake.
+We can train the model locally, upload it to a stage and load it from the stage when the UDF is called.
+We can define SPROC, which can train the model and save the trained model into the Snowflake stage when the SPROC is called. Here we&#x27;ll need a separate UDF for the inferencing part.</p>
+<p>In this article, we will explore both methods above.</p>
+<doc-anchor-target id="train-the-model-locally-upload-it-to-a-stage-and-load-it-from-the-stage">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#train-the-model-locally-upload-it-to-a-stage-and-load-it-from-the-stage">#</doc-anchor-trigger>
+        <span>Train the model locally, upload it to a stage and load it from the stage</span>
+    </h2>
+</doc-anchor-target>
+<p><figure class="content-center">
+    <img src="../../images/ml-on-snowflake/method1.png" alt="Method 01">
+    <figcaption class="caption">Method 01</figcaption>
+</figure>
+</p>
+<p>First, we have to define the function for training the model locally.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">def train_model_locally(train:snowflake.snowpark.table.Table):
+    from sklearn.tree import DecisionTreeClassifier
+    
+    #convert into pd dataframes
+    
+    train = train.to_pandas()
+    
+    xtrain,ytrain = train.drop('TARGET',axis=1),train['TARGET']
+    
+    model = DecisionTreeClassifier()
+    model.fit(xtrain,ytrain)
+    
+    return model
+
+#let's train the DT model
+model = train_model_locally(train_data_sf)
+
+#save the model
+import joblib
+joblib.dump(model, 'predict_risk_score.joblib')
+
+#upload into the ML_MODELS SNowfla
+session.file.put(
+    &quot;predict_risk_score.joblib&quot;, &quot;@ML_MODELS&quot;, auto_compress=False, overwrite=True
+)</code></pre>
+</doc-codeblock></div>
+<p>Similar to other machine learning pipelines, we need to define library dependencies.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">session.clear_imports()
+session.clear_packages()
+
+#Register above uploded model as import of UDF
+session.add_import(&quot;@ML_MODELS/predict_risk_score.joblib&quot;)
+
+#map packege dependancies
+session.add_packages(&quot;joblib==1.1.0&quot;, &quot;scikit-learn==1.1.1&quot;, &quot;pandas==1.3.2&quot;)</code></pre>
+</doc-codeblock></div>
+<p>Let&#x27;s define the UDF. Inside the UDF, it should load the model from the stage and then use it for the inferencing.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">from snowflake.snowpark.types import PandasSeries, PandasDataFrame
+
+def read_file(filename):
+    import joblib
+    import sys
+    import os
+    
+    #where all imports located at
+    import_dir = sys._xoptions.get(&quot;snowflake_import_directory&quot;)
+
+    if import_dir:
+        with open(os.path.join(import_dir, filename), 'rb') as file:
+            m = joblib.load(file)
+            return m
+
+#register UDF
+@F.udf(name = 'predict_risk_score', is_permanent = True, replace = True, stage_location = '@ML_MODELS')
+def predict_risk_score(ds: PandasSeries[dict]) -&gt; PandasSeries[float]:
+    
+    # later we will input train data as JSON object
+    # hance, we have to convert JSON object as pandas DF
+    df = pd.io.json.json_normalize(ds)[feature_cols]
+    pipeline = read_file('predict_risk_score.joblib')
+    return pipeline.predict_proba(df)[:,1]</code></pre>
+</doc-codeblock></div>
+<p>Now we have successfully registered our UDF in Snowflake. You can verify it using the following way.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">session.sql(&quot;DESC FUNCTION PREDICT_RISK_SCORE()&quot;).show()
+
+# ------------------------------------------------------------------------
+# |&quot;property&quot;       |&quot;value&quot;                                             |
+# ------------------------------------------------------------------------
+# |signature        |()                                                  |
+# |returns          |FLOAT                                               |
+# |language         |PYTHON                                              |
+# |null handling    |CALLED ON NULL INPUT                                |
+# |volatility       |VOLATILE                                            |
+# |body             |                                                    |
+# |                 |import pickle                                       |
+# |                 |                                                    |
+# |                 |func = pickle.loads(bytes.fromhex('800595050400...  |
+# |                 |# The following comment contains the UDF source...  |
+# |                 |# import pandas as pd                               |
+# |                 |# def read_file(filename):                          |
+# |                 |#     import joblib                                 |
+# |                 |#     import sys                                    |
+# |                 |#     import os                                     |
+# |                 |#                                                   |
+# |                 |#     import_dir = sys._xoptions.get(&quot;snowflake...  |
+# |                 |#     if import_dir:                                |
+# |                 |#         with open(os.path.join(import_dir, fi...  |
+# |                 |#             m = joblib.load(file)                 |
+# |                 |#             return m                              |
+# |                 |# @F.udf(name = 'predict_risk_score', is_perman...  |
+# |                 |# def predict_risk_score(*args) -&gt; PandasSeries...  |
+# |                 |#     df = pd.DataFrame([args])                     |
+# |                 |#     pipeline = read_file('predict_risk_score....  |
+# |                 |#     return pipeline.predict_proba(df)[:,1]        |
+# |                 |#                                                   |
+# |                 |# func = predict_risk_score                         |
+# |                 |#                                                   |
+# |                 | *********RESULTS TRUNCATED**************           |
+# ------------------------------------------------------------------------</code></pre>
+</doc-codeblock></div>
+<p>Let&#x27;s use UDF for inferencing.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python"># `test_data_sf` is a fraction of `train_data`
+test_data_sf.with_column(
+    'PREDICTION', 
+    predict_risk_score(F.object_construct('*')))\
+.select(&quot;TARGET&quot;,&quot;PREDICTION&quot;).show(20)
+
+# ---------------------------------
+# |&quot;TARGET&quot;  |&quot;PREDICTION&quot;        |
+# ---------------------------------
+# |1         |0.8333333333333334  |
+# |1         |0.0                 |
+# |1         |1.0                 |
+# |1         |1.0                 |
+# |1         |0.3333333333333333  |
+# |0         |0.0                 |
+# |1         |0.4                 |
+# |0         |0.5                 |
+# |1         |0.421875            |
+# ---------------------------------
+
+#similary, you can use below SQL as well.</code></pre>
+</doc-codeblock></div>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-sql"><code v-pre class="language-sql">select
+    target,
+    predict_risk_score(object_construct(*)) as predictions
+from
+    COVID19_RECORDS_PROCESSED
+limit
+    100;</code></pre>
+</doc-codeblock></div>
+<doc-anchor-target id="define-train-and-inferencing-procsudfs">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#define-train-and-inferencing-procsudfs">#</doc-anchor-trigger>
+        <span>Define train and inferencing procs/UDFs</span>
+    </h2>
+</doc-anchor-target>
+<p>This method will create a stored procedure for training the model and UDF for inferencing the model. You may refer to the diagram below for more insights.</p>
+<p><figure class="content-center">
+    <img src="../../images/ml-on-snowflake/method2.png" alt="Method 02">
+    <figcaption class="caption">Method 02</figcaption>
+</figure>
+</p>
+<p>Let&#x27;s define the stored procedure. At first, we will implement the Python function, and we can convert it to the Snowflake stored procedure in later steps.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">def train_dt_procedure(
+    session: Session,
+    training_table: str,
+    feature_cols: list,
+    target_col: str,
+    model_name: str,
+) -&gt; T.Variant:
+    
+    &quot;&quot;&quot;
+    This will be our training procedure. Later we will register this as snowflake procedure.
+    
+    training_table: snowflake table name to be used for training task
+    feature_cols: list of columns to be used in training
+    target_col: target column to be used
+    model_name: model name to used for model saving purpose
+    
+    &quot;&quot;&quot;
+
+    #convert as pandas DF, rest of the steps similar to the local model training and saving.
+    local_training_data = session.table(training_table).to_pandas()
+
+    from sklearn.tree import DecisionTreeClassifier
+
+    X = local_training_data[feature_cols]
+    y = local_training_data[target_col]
+
+    model = DecisionTreeClassifier()
+    model.fit(X, y)
+    
+    #do what ever you want to do with model, even the hyperparameter tuning..
+    # here I'll get feature importance
+    feat_importance = pd.DataFrame(
+        model.feature_importances_, feature_cols, columns=[&quot;FeatImportance&quot;]
+    ).to_dict()
+
+    from joblib import dump
+
+    dump(model, &quot;/tmp/&quot; + model_name)
+    session.file.put(
+        &quot;/tmp/&quot; + model_name, &quot;@ML_MODELS&quot;, auto_compress=False, overwrite=True
+    )
+    return feat_importance</code></pre>
+</doc-codeblock></div>
+<p>Let&#x27;s register the above Python function as a stored procedure.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">sproc_train_dt_model = session.sproc.register(
+                    func=train_dt_procedure, 
+                    name='sproc_train_dt_model', 
+                    is_permanent=True, 
+                    replace=True, 
+                    stage_location='@ML_MODELS', 
+                    packages=[
+                        'snowflake-snowpark-python',
+                        'scikit-learn',
+                        'joblib']
+)</code></pre>
+</doc-codeblock></div>
+<p>Now we can use the procedure <code v-pre>SPROC_TRAIN_DT_MODEL()</code> as follows.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">train_data = session.table(&quot;COVID19_RECORDS_PROCESSED&quot;)
+
+#create train and test dataframes
+train_data_pd,test_data_pd = train_test_split(
+                                        train_data_pd,
+                                        stratify=train_data_pd['TARGET'],
+                                        test_size=0.1
+)
+
+# writing as tempoary tables for mode training and inferencing part
+session.write_pandas(
+    train_data_pd,
+    table_name=&quot;TRAIN_DATA_TMP&quot;,
+    auto_create_table=True,
+    table_type=&quot;temporary&quot;,
+)
+session.write_pandas(
+    test_data_pd,
+    table_name=&quot;TEST_DATA_TMP&quot;,
+    auto_create_table=True,
+    table_type=&quot;temporary&quot;,
+)
+
+train_data_pd = train_data.to_pandas()
+
+feature_cols = train_data.columns
+feature_cols.remove('TARGET')
+target_col = 'TARGET'
+model_name = 'decisiontree.model' # How model should be saved in stage
+
+model_response = sproc_train_dt_model('TRAIN_DATA_TMP', 
+                                            feature_cols, 
+                                            target_col,
+                                            model_name, 
+                                            session=session
+                                           )
+
+print(model_response)
+
+# {
+#   &quot;FeatImportance&quot;: {
+#     &quot;AGE&quot;: 0.4543249401305732,
+#     &quot;ASTHMA&quot;: 0.029003830541684678,
+#     &quot;CARDIOVASCULAR&quot;: 0.025649097586968667,
+#     &quot;COPD&quot;: 0.019300936592021863,
+#     &quot;DIABETES&quot;: 0.059273293874405074,
+#     &quot;HIPERTENSION&quot;: 0.05885196748765571,
+#     &quot;INMSUPR&quot;: 0.0232534703448427,
+#     &quot;INTUBED&quot;: 0.026365011429648998,
+#     &quot;MEDICAL_UNIT&quot;: 0.08804779552309593,
+#     &quot;OBESITY&quot;: 0.02991724846285235,
+#     &quot;OTHER_DISEASE&quot;: 0.026840169399286344,
+#     &quot;PATIENT_TYPE&quot;: 0,
+#     &quot;PNEUMONIA&quot;: 0.04225497414608237,
+#     &quot;PREGNANT&quot;: 0.012929499812685114,
+#     &quot;RENAL_CHRONIC&quot;: 0.015894267526361774,
+#     &quot;SEX&quot;: 0,
+#     &quot;TOBACCO&quot;: 0.028563364646896985,
+#     &quot;USMER&quot;: 0.059530132494938236
+#   }
+# }
+
+#plot feature importance
+feature_coefficients = pd.DataFrame(eval(model_response))
+
+feature_coefficients\
+.sort_values(by='FeatImportance',ascending=False)\
+.plot\
+.bar(y='FeatImportance', figsize=(12,5))
+plt.show()</code></pre>
+</doc-codeblock></div>
+<p><figure class="content-center">
+    <img src="../../images/ml-on-snowflake/modeldisgonostics.png" alt="Feature importance">
+    <figcaption class="caption">Feature importance</figcaption>
+</figure>
+</p>
+<p>We can define the UDF as follows. This function is similar to the previous one.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">def udf_predict_risk_score(*args) -&gt; float:
+    import os
+    import sys
+    from joblib import load
+    
+    IMPORT_DIRECTORY_NAME = &quot;snowflake_import_directory&quot;
+    import_dir = sys._xoptions[IMPORT_DIRECTORY_NAME]
+    model_name = 'decisiontree.model'
+    model = load(import_dir+model_name)
+    
+    #unlike previous JSON object, this will be a array, hence no need to
+    # decode the input
+    scored_data = model.predict(pd.DataFrame([args]))[0]
+
+    return scored_data</code></pre>
+</doc-codeblock></div>
+<p>Finally, registering the UDF.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-python"><code v-pre class="language-python">udf_risk_score_model = session.udf.register(
+                            func=udf_predict_risk_score, 
+                            name=&quot;udf_risk_score_model&quot;, 
+                            stage_location='@ML_MODELS',
+                            input_types=[T.FloatType()]*len(feature_cols),
+                            return_type = T.FloatType(),
+                            replace=True, 
+                            is_permanent=True, 
+                            imports=['@ML_MODELS/decisiontree.model'],
+                            packages=['scikit-learn==1.1.1','pandas','joblib'], 
+                            session=session
+)</code></pre>
+</doc-codeblock></div>
+<p>Alright, it&#x27;s time to get predictions for our validation dataset. Here I am doing it with Snowflake editor.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-sql"><code v-pre class="language-sql">SELECT
+    &quot;TARGET&quot;,
+    udf_risk_score_model(
+        &quot;USMER&quot;,
+        &quot;MEDICAL_UNIT&quot;,
+        &quot;SEX&quot;,
+        &quot;PATIENT_TYPE&quot;,
+        &quot;INTUBED&quot;,
+        &quot;PNEUMONIA&quot;,
+        &quot;AGE&quot;,
+        &quot;PREGNANT&quot;,
+        &quot;DIABETES&quot;,
+        &quot;COPD&quot;,
+        &quot;ASTHMA&quot;,
+        &quot;INMSUPR&quot;,
+        &quot;HIPERTENSION&quot;,
+        &quot;OTHER_DISEASE&quot;,
+        &quot;CARDIOVASCULAR&quot;,
+        &quot;OBESITY&quot;,
+        &quot;RENAL_CHRONIC&quot;,
+        &quot;TOBACCO&quot;
+    ) AS &quot;PREDICTION&quot;
+FROM
+    COVID19_RECORDS_PROCESSED limit 100;</code></pre>
+</doc-codeblock></div>
+<doc-anchor-target id="conclusion">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#conclusion">#</doc-anchor-trigger>
+        <span>Conclusion</span>
+    </h2>
+</doc-anchor-target>
+<p>While snowpark offers a comprehensive platform for our machine learning tasks, it has a <a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/python-snowpark-training-ml.html#limitations-and-known-issues">few issues</a> at the time of writing this article. As an example, PyTorch still needs to be supported by a snowpark. Also, only selected packages are available in conda; if we want to use other packages, such as catboost, we must import them manually into our environment as described <a href="https://docs.snowflake.com/en/developer-guide/snowpark/python/creating-udfs.html#reading-files-from-a-udf">here</a>.</p>
+<p>Thanks for reading!</p>
+<p>Connect with me on <a href="https://www.linkedin.com/in/ransaka/">LinkedIn</a>.</p>
+
+                                <div class="flex items-center mt-6 mb-6 clear-both">
+                                    <span>
+                                        <a href="../../tags/">
+                                            <svg class="inline-block -mb-px mr-1.5 text-blue-500 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" overflow="visible" fill="currentColor"><g><path d="M21.3 9.88l-8.59-8.59C12.52 1.11 12.27 1 12 1H2c-.55 0-1 .45-1 1v10c0 .27.11.52.29.71l8.59 8.58c.57.57 1.32.88 2.12.88s1.55-.31 2.12-.88l7.17-7.17a3.009 3.009 0 00.01-4.24zm-1.42 2.82l-7.17 7.17c-.39.39-1.02.39-1.42 0L3 11.59V3h8.59l8.29 8.29c.39.39.39 1.03 0 1.41z" /><path d="M7.01 6C6.45 6 6 6.45 6 7s.45 1 1 1 1-.45 1-1-.44-1-.99-1z" /></g></svg>
+                                        </a>
+                                        <span class="mr-2"><a href="../../tags/snowflake/" class="no-link inline-flex align-middle items-center justify-center font-medium leading-none whitespace-nowrap text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-transparent dark:hover:border-blue-200 dark:hover:text-blue-200 transition-colors duration-200 ease-out h-6 px-2 text-xs rounded-md">
+                                    <span>snowflake</span>
+                                </a></span>
+                                        <span class="mr-2"><a href="../../tags/cloud/" class="no-link inline-flex align-middle items-center justify-center font-medium leading-none whitespace-nowrap text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-transparent dark:hover:border-blue-200 dark:hover:text-blue-200 transition-colors duration-200 ease-out h-6 px-2 text-xs rounded-md">
+                                    <span>cloud</span>
+                                </a></span>
+                                        <span class="mr-2"><a href="../../tags/data-engineering/" class="no-link inline-flex align-middle items-center justify-center font-medium leading-none whitespace-nowrap text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-transparent dark:hover:border-blue-200 dark:hover:text-blue-200 transition-colors duration-200 ease-out h-6 px-2 text-xs rounded-md">
+                                    <span>data engineering</span>
+                                </a></span>
+                                        <span class="mr-2"><a href="../../tags/machine-learning/" class="no-link inline-flex align-middle items-center justify-center font-medium leading-none whitespace-nowrap text-blue-500 dark:text-blue-400 border border-blue-500 dark:border-blue-400 hover:bg-blue-100 dark:hover:bg-transparent dark:hover:border-blue-200 dark:hover:text-blue-200 transition-colors duration-200 ease-out h-6 px-2 text-xs rounded-md">
+                                    <span>machine learning</span>
+                                </a></span>
+                                    </span>
+                                </div>
+                
+                                <!-- Required only on API pages -->
+                                <doc-toolbar-member-filter-no-results></doc-toolbar-member-filter-no-results>
+                            </div>
+                            <footer class="clear-both">
+                            
+                                <nav class="flex mt-14">
+                                    <div class="w-1/2">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+                                            <span>
+                                                <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
+                                                <span class="block mt-1">Welcome to My Blog</span>
+                                            </span>
+                                        </a>
+                                    </div>
+                            
+                                    <div class="w-1/2">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../ransakas-blog/smote-with-caution/">
+                                            <span>
+                                                <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
+                                                <span class="block mt-1">Use SMOTE with Caution</span>
+                                            </span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+                                        </a>
+                                    </div>
+                                </nav>
+                            </footer>
+                        </main>
+                
+                        <div class="border-t dark:border-dark-650 pt-6 mb-8">
+                            <footer class="flex flex-wrap items-center justify-between">
+                                <div>
+                                    <ul class="flex flex-wrap items-center text-sm">
+                                    </ul>
+                                </div>
+                                <div class="docs-copyright py-2 text-gray-500 dark:text-dark-350 text-sm leading-relaxed"><p>© Copyright 2023. All rights reserved.</p></div>
+                            </footer>
+                        </div>
+                    </div>
+                
+                    <!-- Rendered if sidebar right is enabled -->
+                    <!-- Sidebar right skeleton-->
+                    <div v-cloak class="fixed top-0 bottom-0 right-0 translate-x-full bg-white border-gray-200 lg:sticky lg:border-l lg:shrink-0 lg:pt-6 lg:transform-none sm:w-1/2 lg:w-64 lg:z-0 md:w-104 sidebar-right skeleton dark:bg-dark-850 dark:border-dark-650">
+                        <div class="pl-5">
+                            <div class="w-32 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+                            <div class="w-48 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+                            <div class="w-40 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+                        </div>
+                    </div>
+                
+                    <!-- User should be able to hide sidebar right -->
+                    <doc-sidebar-right v-cloak></doc-sidebar-right>
+                </div>
+
+            </div>
+        </div>
+    
+        <doc-search-mobile></doc-search-mobile>
+        <doc-back-to-top></doc-back-to-top>
+    </div>
+
+
+    <div id="docs-overlay-target"></div>
+
+    <script data-cfasync="false">window.__DOCS__ = { "title": "Machine Learning on Snowflake", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false, tocDepth: 23 }</script>
+</body>
+</html>
