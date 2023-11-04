@@ -5,7 +5,7 @@ Welcome to my personal blog, where I convert my experience into blog posts. You 
 ---
 
 ## Who am I?
-I'm Ransaka Ravihara. Computer science graduate from [University of Colombo](https://www.google.com/search?q=University%20of%20Colombo%20School%20of%20Computing). I have morethan 4 years experience as a Data Scientist. Appart from coding and stats, I love to stay alone at nature.
+I'm Ransaka Ravihara, and I graduated in Computer Science from the [University of Colombo School of Computing](https://www.google.com/search?q=University%20of%20Colombo%20School%20of%20Computing). I have over four years of experience as a Data Scientist. Aside from working with data and code, I enjoy spending time alone in nature.
 
 ---
 ## My professional journey so far
@@ -60,5 +60,5 @@ I'm Ransaka Ravihara. Computer science graduate from [University of Colombo](htt
     Skills:
     [!badge corners="pill" variant="info" size="s" text="GCP"] [!badge corners="pill" variant="info" size="s" text="SQL"] [!badge corners="pill" variant="info" size="s" text="PyTorch"] [!badge corners="pill" variant="info" size="s" text="Python"] [!badge corners="pill" variant="info" size="s" text="Pandas"] [!badge corners="pill" variant="info" size="s" text="Numpy"] [!badge corners="pill" variant="info" size="s" text="Generative AI"] [!badge corners="pill" variant="info" size="s" text="NLP"]
 
-## Download my resume
-[!file](/Images/blog/age_dist.png)
+<!-- ## Download my resume
+[!file](/Images/blog/age_dist.png) -->
