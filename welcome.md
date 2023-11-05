@@ -49,7 +49,7 @@ I'm Ransaka Ravihara, and I graduated in Computer Science from the [University o
     Skills:
     [!badge corners="pill" variant="info" size="s" text="AWS"] [!badge corners="pill" variant="info" size="s" text="SQL Server"] [!badge corners="pill" variant="info" size="s" text="PyTorch"] [!badge corners="pill" variant="info" size="s" text="Python"] [!badge corners="pill" variant="info" size="s" text="Pandas"] [!badge corners="pill" variant="info" size="s" text="Numpy"] [!badge corners="pill" variant="info" size="s" text="NLP"] [!badge corners="pill" variant="info" size="s" text="Generative AI"] 
 
-- [!badge variant="primary" text="2023 Mar - Present"] [!badge variant="ghost" text="Senior Data Scientist @ Codimite Technologies"]
+- [!badge variant="primary" text="2023 Sep - Present"] [!badge variant="ghost" text="Senior Data Scientist @ Codimite Technologies"]
     - Lead the data science team at Codimite Technologies.
     - Work closely with the product team to understand the business requirements and formulate the data science roadmap.
     - Build customer attrition prediction models for one of the leading productivity management applications in the USA.
