@@ -1,11 +1,10 @@
 input: .
 output: .retype
-url: # Add your website address here
+url: ransaka.github.io
 branding:
   title: Ransaka's Blog
   logo: Images/blog/age_dist.png
-# links:
-# - text: contact me
-#   link: /contact
+meta:
+  title: "  | Ransaka's Blog"
 footer:
   copyright: "&copy; Copyright {{ year }}. All rights reserved."
