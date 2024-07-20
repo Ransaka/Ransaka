@@ -54,7 +54,9 @@ I'm Ransaka Ravihara, and I graduated in Computer Science from the [University o
     - Work closely with the product team to understand the business requirements and formulate the data science roadmap.
     - Build customer attrition prediction models for one of the leading productivity management applications in the USA.
     - Reasearch and build scoring models for the measurement of the employee's productivity.
-    
+    - Use LoRA fine-tuning to adapt LLMs into specific domains. 
+    - Use langchain to build interactive chatbots with memory.
+
     And jurney continues...
     
     Skills:
