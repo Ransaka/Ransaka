@@ -6,7 +6,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.5.0.775491001273">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.5.0.775491422015">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.5.0">
@@ -14,7 +14,7 @@
     <!-- Primary Meta Tags -->
     <title>Using Llama 3 for Building AI Agents  | Ransaka&#39;s Blog</title>
     <meta name="title" content="Using Llama 3 for Building AI Agents  | Ransaka's Blog">
-    <meta name="description" content="Comprehensive guide to building AI Agents with Llama 3.1 function calling capabilities.">
+    <meta name="description" content="Comprehensive guide to building AI Agents with Llama 3 function calling capabilities.">
 
     <!-- Canonical -->
     <link rel="canonical" href="https://ransaka.github.io/ransakas-blog/building-ai-agent-with-llama-3/">
@@ -23,22 +23,22 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ransaka.github.io/ransakas-blog/building-ai-agent-with-llama-3/">
     <meta property="og:title" content="Using Llama 3 for Building AI Agents  | Ransaka's Blog">
-    <meta property="og:description" content="Comprehensive guide to building AI Agents with Llama 3.1 function calling capabilities.">
+    <meta property="og:description" content="Comprehensive guide to building AI Agents with Llama 3 function calling capabilities.">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://ransaka.github.io/ransakas-blog/building-ai-agent-with-llama-3/">
     <meta property="twitter:title" content="Using Llama 3 for Building AI Agents  | Ransaka's Blog">
-    <meta property="twitter:description" content="Comprehensive guide to building AI Agents with Llama 3.1 function calling capabilities.">
+    <meta property="twitter:description" content="Comprehensive guide to building AI Agents with Llama 3 function calling capabilities.">
 
     <script data-cfasync="false">(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=3.5.0.775491001273" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.5.0.775491422015" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.5.0.775491001273" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.5.0.775491422015" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.5.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.5.0.775491001273" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.5.0.775491001273" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.5.0.775491422015" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.5.0.775491422015" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -164,7 +164,7 @@
     </h1>
 </doc-anchor-target>
 <blockquote>
-<p>Comprehensive guide to building AI Agents with Llama 3.1 function calling capabilities.</p>
+<p>Comprehensive guide to building AI Agents with Llama 3 function calling capabilities.</p>
 </blockquote>
 <p><figure class="content-center">
     <img src="../../images/ai-agents/untitled-design-(3).png" alt="Image by Author via Canva">
@@ -189,7 +189,7 @@
     <figcaption class="caption">User is asking for the most cost-effective purchase he/she can make.</figcaption>
 </figure>
 </p>
-<p>Alright, let’s bring life into this application. Here we are going to use Meta’s Llama 3.1 model with function calling capability. As per their announcement, the 3.1 models are capable of using tools and functions more effectively.</p>
+<p>Alright, let’s bring life into this application. Here we are going to use Meta’s Llama 3 model with function calling capability. As per their announcement, the 3 models are capable of using tools and functions more effectively.</p>
 <p>These are multilingual and have a significantly longer context length of 128K, state-of-the-art tool use, and overall stronger reasoning capabilities</p>
 <p>However, for this article, I’m going to use Groq Cloud, hence I am going to use their Groq/Llama-3-Groq-70B-Tool-Use model. As per the initial workflow of this application, this should consist of an embedding model, a retriever, and two main tools for handling user purchase interests and cost-related concerns. Long story short, we need something similar to what we described in the diagram below.</p>
 <p><figure class="content-center">
