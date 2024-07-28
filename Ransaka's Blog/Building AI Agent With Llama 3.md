@@ -1,7 +1,7 @@
 # Using Llama 3 for Building AI Agents
 >Comprehensive guide to building AI Agents with Llama 3.1 function calling capabilities.
 
-![Alt text](<../Images/ai-agents/Untitled design (3).png>)
+![Image by Author via Canva](<../Images/ai-agents/Untitled design (3).png>)
 
 ## Introduction
 Let’s assume a scenario where you want to purchase something. You head over to an e-commerce website, use the search option to find what you want. Maybe you have a bunch of items to purchase as well. So the process is not very optimized, is it? Now think about this scenario: you head over to an application, explain what you want in plain English, and hit enter. All the searching and price comparisons are automatically done for you. Pretty cool, right? That’s exactly what we are going to build in this tutorial.
@@ -9,9 +9,9 @@ Let’s assume a scenario where you want to purchase something. You head over to
 Let’s see some examples first.
 
 ![user asking multiple products at once](../Images/ai-agents/example1.png)
-user asking multiple products at once
+
 ![User is asking for the most cost-effective purchase he/she can make.](../Images/ai-agents/example2.png)
-User is asking for the most cost-effective purchase he/she can make.
+
 
 Alright, let’s bring life into this application. Here we are going to use Meta’s Llama 3.1 model with function calling capability. As per their announcement, the 3.1 models are capable of using tools and functions more effectively.
 
@@ -19,7 +19,7 @@ These are multilingual and have a significantly longer context length of 128K, s
 
 However, for this article, I’m going to use Groq Cloud, hence I am going to use their Groq/Llama-3-Groq-70B-Tool-Use model. As per the initial workflow of this application, this should consist of an embedding model, a retriever, and two main tools for handling user purchase interests and cost-related concerns. Long story short, we need something similar to what we described in the diagram below.
 
-![Alt text](../Images/ai-agents//architecture.webp)
+![Architecture Diagram](../Images/ai-agents//architecture.webp)
 
 Now we have to use an LLM orchestration framework. For that, I am picking my all-time favourite, Haystack.
 
@@ -78,7 +78,7 @@ Great, we’ve completed the first step of our AI agent application. Now it’s 
 
 >User Query: I want to buy a camping boot, an charcoal and google pixel 9 back cover. Let’s understand our ideal workflow for product identifier function.
 
-![Alt text](../Images/ai-agents//flow1.webp)
+![Workflow of product_identifier_function](../Images/ai-agents//flow1.webp)
 
 First, we need to create tool for analyse user query and identify user interested products. We can build such tool using below code snippets.
 
@@ -110,7 +110,7 @@ product_identifier.connect("prompt_builder", "llm")
 
 Okay, now we have completed the half of our first function, now it’s time to complete function by adding RAG pipeline.
 
-![Alt text](../Images/ai-agents//flow2.webp)
+![Workflow of product_identifier_function](../Images/ai-agents//flow2.webp)
 
 ## Creating RAG Pipeline
 
@@ -177,7 +177,7 @@ def product_identifier_func(query: str):
     return results
 ```
 
-![Alt text](../Images/ai-agents//flow3.webp)
+![Workflow of product_identifier_function](../Images/ai-agents//flow3.webp)
 
 With that, we have completed our first tool for the agent. Let’s see whether it works as expected.
 
@@ -321,7 +321,7 @@ pprint(response)
 
 With that, we have completed about 90% of our work.
 
-![Alt text](../Images/ai-agents//progress.webp)
+![You almost there](../Images/ai-agents//progress.webp)
 
 ---
 One thing you probably noticed in the above response is that tool calls are enclosed using the XML tag `<tool_call>`. Therefore, we have to build some mechanism to extract the tool_call object.
