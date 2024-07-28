@@ -6,7 +6,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.5.0.775490623154">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.5.0.775491001273">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.5.0">
@@ -33,12 +33,12 @@
 
     <script data-cfasync="false">(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=3.5.0.775490623154" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.5.0.775491001273" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.5.0.775490623154" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.5.0.775491001273" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.5.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.5.0.775490623154" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.5.0.775490623154" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.5.0.775491001273" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.5.0.775491001273" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -167,8 +167,8 @@
 <p>Comprehensive guide to building AI Agents with Llama 3.1 function calling capabilities.</p>
 </blockquote>
 <p><figure class="content-center">
-    <img src="../../images/ai-agents/untitled-design-(3).png" alt="Alt text">
-    <figcaption class="caption">Alt text</figcaption>
+    <img src="../../images/ai-agents/untitled-design-(3).png" alt="Image by Author via Canva">
+    <figcaption class="caption">Image by Author via Canva</figcaption>
 </figure>
 </p>
 <doc-anchor-target id="introduction">
@@ -183,18 +183,18 @@
     <img src="../../images/ai-agents/example1.png" alt="user asking multiple products at once">
     <figcaption class="caption">user asking multiple products at once</figcaption>
 </figure>
-user asking multiple products at once
-<figure class="content-center">
+</p>
+<p><figure class="content-center">
     <img src="../../images/ai-agents/example2.png" alt="User is asking for the most cost-effective purchase he/she can make.">
     <figcaption class="caption">User is asking for the most cost-effective purchase he/she can make.</figcaption>
 </figure>
-User is asking for the most cost-effective purchase he/she can make.</p>
+</p>
 <p>Alright, let’s bring life into this application. Here we are going to use Meta’s Llama 3.1 model with function calling capability. As per their announcement, the 3.1 models are capable of using tools and functions more effectively.</p>
 <p>These are multilingual and have a significantly longer context length of 128K, state-of-the-art tool use, and overall stronger reasoning capabilities</p>
 <p>However, for this article, I’m going to use Groq Cloud, hence I am going to use their Groq/Llama-3-Groq-70B-Tool-Use model. As per the initial workflow of this application, this should consist of an embedding model, a retriever, and two main tools for handling user purchase interests and cost-related concerns. Long story short, we need something similar to what we described in the diagram below.</p>
 <p><figure class="content-center">
-    <img src="../../images/ai-agents/architecture.webp" alt="Alt text">
-    <figcaption class="caption">Alt text</figcaption>
+    <img src="../../images/ai-agents/architecture.webp" alt="Architecture Diagram">
+    <figcaption class="caption">Architecture Diagram</figcaption>
 </figure>
 </p>
 <p>Now we have to use an LLM orchestration framework. For that, I am picking my all-time favourite, Haystack.</p>
@@ -257,8 +257,8 @@ indexing_pipeline.run({&quot;doc_embedder&quot;: {&quot;documents&quot;: documen
 <p>User Query: I want to buy a camping boot, an charcoal and google pixel 9 back cover. Let’s understand our ideal workflow for product identifier function.</p>
 </blockquote>
 <p><figure class="content-center">
-    <img src="../../images/ai-agents/flow1.webp" alt="Alt text">
-    <figcaption class="caption">Alt text</figcaption>
+    <img src="../../images/ai-agents/flow1.webp" alt="Workflow of product_identifier_function">
+    <figcaption class="caption">Workflow of product_identifier_function</figcaption>
 </figure>
 </p>
 <p>First, we need to create tool for analyse user query and identify user interested products. We can build such tool using below code snippets.</p>
@@ -293,8 +293,8 @@ product_identifier.connect(&quot;prompt_builder&quot;, &quot;llm&quot;)</code></
 </doc-codeblock></div>
 <p>Okay, now we have completed the half of our first function, now it’s time to complete function by adding RAG pipeline.</p>
 <p><figure class="content-center">
-    <img src="../../images/ai-agents/flow2.webp" alt="Alt text">
-    <figcaption class="caption">Alt text</figcaption>
+    <img src="../../images/ai-agents/flow2.webp" alt="Workflow of product_identifier_function">
+    <figcaption class="caption">Workflow of product_identifier_function</figcaption>
 </figure>
 </p>
 <doc-anchor-target id="creating-rag-pipeline">
@@ -368,8 +368,8 @@ rag_pipe.connect(&quot;prompt_builder&quot;, &quot;llm&quot;)</code></pre>
     return results</code></pre>
 </doc-codeblock></div>
 <p><figure class="content-center">
-    <img src="../../images/ai-agents/flow3.webp" alt="Alt text">
-    <figcaption class="caption">Alt text</figcaption>
+    <img src="../../images/ai-agents/flow3.webp" alt="Workflow of product_identifier_function">
+    <figcaption class="caption">Workflow of product_identifier_function</figcaption>
 </figure>
 </p>
 <p>With that, we have completed our first tool for the agent. Let’s see whether it works as expected.</p>
@@ -508,8 +508,8 @@ pprint(response)
 </doc-codeblock></div>
 <p>With that, we have completed about 90% of our work.</p>
 <p><figure class="content-center">
-    <img src="../../images/ai-agents/progress.webp" alt="Alt text">
-    <figcaption class="caption">Alt text</figcaption>
+    <img src="../../images/ai-agents/progress.webp" alt="You almost there">
+    <figcaption class="caption">You almost there</figcaption>
 </figure>
 </p>
 <hr>
