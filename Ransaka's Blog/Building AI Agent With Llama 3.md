@@ -1,5 +1,5 @@
 # Using Llama 3 for Building AI Agents
->Comprehensive guide to building AI Agents with Llama 3.1 function calling capabilities.
+>Comprehensive guide to building AI Agents with Llama 3 function calling capabilities.
 
 ![Image by Author via Canva](<../Images/ai-agents/Untitled design (3).png>)
 
@@ -13,7 +13,7 @@ Let’s see some examples first.
 ![User is asking for the most cost-effective purchase he/she can make.](../Images/ai-agents/example2.png)
 
 
-Alright, let’s bring life into this application. Here we are going to use Meta’s Llama 3.1 model with function calling capability. As per their announcement, the 3.1 models are capable of using tools and functions more effectively.
+Alright, let’s bring life into this application. Here we are going to use Meta’s Llama 3 model with function calling capability. As per their announcement, the 3 models are capable of using tools and functions more effectively.
 
 These are multilingual and have a significantly longer context length of 128K, state-of-the-art tool use, and overall stronger reasoning capabilities
 
