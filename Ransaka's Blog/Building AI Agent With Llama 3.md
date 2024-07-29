@@ -13,22 +13,22 @@ Let’s see some examples first.
 ![User is asking for the most cost-effective purchase he/she can make.](../Images/ai-agents/example2.png)
 
 
-Alright, let’s bring life into this application. Here we are going to use Meta’s Llama 3 model with function calling capability. As per their announcement, the 3 models are capable of using tools and functions more effectively.
+Alright, let’s bring life into this application. Here, we are going to use Meta’s Llama 3 model with function calling capability. However, this can be done using the 3.1 models as well. According to [their announcement](https://ai.meta.com/blog/meta-llama-3-1/), the 3.1 models are capable of using tools and functions more effectively.
 
-These are multilingual and have a significantly longer context length of 128K, state-of-the-art tool use, and overall stronger reasoning capabilities
+>These are multilingual and have a significantly longer context length of 128K, state-of-the-art tool use, and overall stronger reasoning capabilities
 
-However, for this article, I’m going to use Groq Cloud, hence I am going to use their Groq/Llama-3-Groq-70B-Tool-Use model. As per the initial workflow of this application, this should consist of an embedding model, a retriever, and two main tools for handling user purchase interests and cost-related concerns. Long story short, we need something similar to what we described in the diagram below.
+For this article, I’m going to use Groq Cloud, hence I am going to use their `Groq/Llama-3-Groq-70B-Tool-Use` model. As per the initial workflow of this application, this should consist of an embedding model, a retriever, and two main tools for handling user purchase interests and cost-related concerns. Long story short, we need something similar to what we described in the diagram below.
 
 ![Architecture Diagram](../Images/ai-agents//architecture.webp)
 
-Now we have to use an LLM orchestration framework. For that, I am picking my all-time favourite, Haystack.
+Now we have to use an LLM orchestration framework. For that, I am picking my all-time favourite, [Haystack](https://haystack.deepset.ai/).
 
 Okay, we got what we need. Let’s jump into the real work!
 
 ## Loading and Indexing data
 Since we have an RAG pipeline, we should build a document indexing service as the first step. Since this is a demo, I am going to use the in-memory vector database that Haystack offers. Please note that each document in our vector database contains,
 
-- content — which we use to perform similarity search
+- Content — which we use to perform similarity search
 - Id — Unique identifier
 - Price — Product price
 - URL — Product URL
@@ -418,7 +418,7 @@ with gr.Blocks() as demo:
 demo.launch()
 ```
 
-That’s all, we have build the Llama 3 based AI Agent 🤖 with function calling capability.
+That’s it! We have built the Llama 3-based AI Agent 🤖 with function calling capability. You can access the full code from this [GitHub repo](https://github.com/Ransaka/ai-agents-with-llama3). Thanks for reading.
 
 ## Conclusion
 
