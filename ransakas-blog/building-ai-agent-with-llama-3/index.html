@@ -6,7 +6,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.5.0.775491422015">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.5.0.775538745878">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.5.0">
@@ -33,12 +33,12 @@
 
     <script data-cfasync="false">(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=3.5.0.775491422015" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.5.0.775538745878" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.5.0.775491422015" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.5.0.775538745878" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.5.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.5.0.775491422015" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.5.0.775491422015" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.5.0.775538745878" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.5.0.775538745878" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -189,15 +189,17 @@
     <figcaption class="caption">User is asking for the most cost-effective purchase he/she can make.</figcaption>
 </figure>
 </p>
-<p>Alright, let’s bring life into this application. Here we are going to use Meta’s Llama 3 model with function calling capability. As per their announcement, the 3 models are capable of using tools and functions more effectively.</p>
+<p>Alright, let’s bring life into this application. Here, we are going to use Meta’s Llama 3 model with function calling capability. However, this can be done using the 3.1 models as well. According to <a href="https://ai.meta.com/blog/meta-llama-3-1/">their announcement</a>, the 3.1 models are capable of using tools and functions more effectively.</p>
+<blockquote>
 <p>These are multilingual and have a significantly longer context length of 128K, state-of-the-art tool use, and overall stronger reasoning capabilities</p>
-<p>However, for this article, I’m going to use Groq Cloud, hence I am going to use their Groq/Llama-3-Groq-70B-Tool-Use model. As per the initial workflow of this application, this should consist of an embedding model, a retriever, and two main tools for handling user purchase interests and cost-related concerns. Long story short, we need something similar to what we described in the diagram below.</p>
+</blockquote>
+<p>For this article, I’m going to use Groq Cloud, hence I am going to use their <code v-pre>Groq/Llama-3-Groq-70B-Tool-Use</code> model. As per the initial workflow of this application, this should consist of an embedding model, a retriever, and two main tools for handling user purchase interests and cost-related concerns. Long story short, we need something similar to what we described in the diagram below.</p>
 <p><figure class="content-center">
     <img src="../../images/ai-agents/architecture.webp" alt="Architecture Diagram">
     <figcaption class="caption">Architecture Diagram</figcaption>
 </figure>
 </p>
-<p>Now we have to use an LLM orchestration framework. For that, I am picking my all-time favourite, Haystack.</p>
+<p>Now we have to use an LLM orchestration framework. For that, I am picking my all-time favourite, <a href="https://haystack.deepset.ai/">Haystack</a>.</p>
 <p>Okay, we got what we need. Let’s jump into the real work!</p>
 <doc-anchor-target id="loading-and-indexing-data">
     <h2>
@@ -207,7 +209,7 @@
 </doc-anchor-target>
 <p>Since we have an RAG pipeline, we should build a document indexing service as the first step. Since this is a demo, I am going to use the in-memory vector database that Haystack offers. Please note that each document in our vector database contains,</p>
 <ul>
-<li>content — which we use to perform similarity search</li>
+<li>Content — which we use to perform similarity search</li>
 <li>Id — Unique identifier</li>
 <li>Price — Product price</li>
 <li>URL — Product URL</li>
@@ -601,7 +603,7 @@ with gr.Blocks() as demo:
 
 demo.launch()</code></pre>
 </doc-codeblock></div>
-<p>That’s all, we have build the Llama 3 based AI Agent <span class="docs-emoji">&#x1F916;</span> with function calling capability.</p>
+<p>That’s it! We have built the Llama 3-based AI Agent <span class="docs-emoji">&#x1F916;</span> with function calling capability. You can access the full code from this <a href="https://github.com/Ransaka/ai-agents-with-llama3">GitHub repo</a>. Thanks for reading.</p>
 <doc-anchor-target id="conclusion">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#conclusion">#</doc-anchor-trigger>
