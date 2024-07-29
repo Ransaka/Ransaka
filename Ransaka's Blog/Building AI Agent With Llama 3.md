@@ -420,6 +420,8 @@ demo.launch()
 
 That’s it! We have built the Llama 3-based AI Agent 🤖 with function calling capability. You can access the full code from this [GitHub repo](https://github.com/Ransaka/ai-agents-with-llama3). Thanks for reading.
 
+The dataset used in this article can be accessed via this [Kaggle link](https://www.kaggle.com/datasets/promptcloud/amazon-product-dataset-2020). The dataset is licensed under CC0: Public Domain.
+
 ## Conclusion
 
 When building an AI agent-based system, it’s worth noting the time taken to finish a task and the number of API calls (tokens) used to complete a single task. Furthermore, reducing hallucinations is the biggest challenge for us to tackle, and it is an active research area as well. Hence, there is no rule of thumb for use in LLM and agent system building. So, you have to work patiently and tactically to get the AI agent, or in other words, the LLM, on the right track.
