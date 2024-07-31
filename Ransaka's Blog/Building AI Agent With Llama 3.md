@@ -5,7 +5,7 @@ canonical: "https://medium.com/towards-data-science/using-llama-3-for-building-a
 ---
 *This article was originally published on [Medium](https://medium.com/towards-data-science/using-llama-3-for-building-ai-agents-7e74f79d1ccc).*
 
-# How to use Llama 3 for Building AI Agents
+<!-- # How to use Llama 3 for Building AI Agents -->
 >Comprehensive guide to building AI Agents with Llama 3 function calling capabilities.
 
 ![Image by Author via Canva](<../Images/ai-agents/Untitled design (3).png>)
