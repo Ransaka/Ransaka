@@ -3,9 +3,7 @@ title: "Using Llama 3 for Building AI Agents"
 description: "How to use llama 3 for building AI Agents"
 canonical: "https://medium.com/towards-data-science/using-llama-3-for-building-ai-agents-7e74f79d1ccc"
 ---
-*This article was originally published on [Medium](https://medium.com/towards-data-science/using-llama-3-for-building-ai-agents-7e74f79d1ccc).*
 
-<!-- # How to use Llama 3 for Building AI Agents -->
 >Comprehensive guide to building AI Agents with Llama 3 function calling capabilities.
 
 ![Image by Author via Canva](<../Images/ai-agents/Untitled design (3).png>)
@@ -462,3 +460,5 @@ _All images, unless otherwise noted, are by the author._
 - [Introducing Llama 3.1: Our most capable models to date](https://ai.meta.com/blog/meta-llama-3-1/?source=post_page-----7e74f79d1ccc--------------------------------)
 - [Groq's `Llama-3-Groq-70B-Tool-Use` model](https://huggingface.co/Groq/Llama-3-Groq-70B-Tool-Use)
 - [Llama 3 function calling](https://medium.com/p/7e74f79d1ccc#:~:text=https%3A//docs.together.ai/docs/llama%2D3%2Dfunction%2Dcalling)
+
+*This article was originally published on [Medium](https://medium.com/towards-data-science/using-llama-3-for-building-ai-agents-7e74f79d1ccc).*
