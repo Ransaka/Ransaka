@@ -1,23 +1,23 @@
-# Using Llama 3 for Building AI Agents
+# How to use Llama 3 for Building AI Agents
 >Comprehensive guide to building AI Agents with Llama 3 function calling capabilities.
 
 ![Image by Author via Canva](<../Images/ai-agents/Untitled design (3).png>)
 
 ## Introduction
-Let’s assume a scenario where you want to purchase something. You head over to an e-commerce website, use the search option to find what you want. Maybe you have a bunch of items to purchase as well. So the process is not very optimized, is it? Now think about this scenario: you head over to an application, explain what you want in plain English, and hit enter. All the searching and price comparisons are automatically done for you. Pretty cool, right? That’s exactly what we are going to build in this tutorial.
+Imagine you want to buy something. You visit an e-commerce website and use the search option to find what you want. Maybe you have multiple items to buy, so the process isn’t very efficient. Now consider this scenario: open an application, describe what you want in plain English, and press enter. You don't have to worry about searching and price comparisons because the application handles it automatically for you. Pretty cool, right? That’s exactly what we’ll build in this tutorial.
 
-Let’s see some examples first.
+Let’s look at some examples first.
 
-![user asking multiple products at once](../Images/ai-agents/example1.png)
+![User asking multiple products at once](../Images/ai-agents/example1.png)
 
 ![User is asking for the most cost-effective purchase he/she can make.](../Images/ai-agents/example2.png)
 
 
-Alright, let’s bring life into this application. Here, we are going to use Meta’s Llama 3 model with function calling capability. However, this can be done using the 3.1 models as well. According to [their announcement](https://ai.meta.com/blog/meta-llama-3-1/), the 3.1 models are capable of using tools and functions more effectively.
+Alright, let’s bring life to this application. We’re going to use Meta’s Llama 3 model with function calling capability. However, this can also be accomplished using the 3.1 models. According to [Meta’s announcement](https://ai.meta.com/blog/meta-llama-3-1/), the 3.1 models can use tools and functions more effectively.
 
 >These are multilingual and have a significantly longer context length of 128K, state-of-the-art tool use, and overall stronger reasoning capabilities
 
-For this article, I’m going to use Groq Cloud, hence I am going to use their `Groq/Llama-3-Groq-70B-Tool-Use` model. As per the initial workflow of this application, this should consist of an embedding model, a retriever, and two main tools for handling user purchase interests and cost-related concerns. Long story short, we need something similar to what we described in the diagram below.
+I will use Groq Cloud, specifically their model for this article. The initial workflow of this application should consist of an embedding model, a retriever, and two major tools for handling user purchase interests and cost-related concerns. In summary, we need something similar to what we've described in the diagram below.
 
 ![Architecture Diagram](../Images/ai-agents//architecture.webp)
 
@@ -26,12 +26,14 @@ Now we have to use an LLM orchestration framework. For that, I am picking my all
 Okay, we got what we need. Let’s jump into the real work!
 
 ## Loading and Indexing data
-Since we have an RAG pipeline, we should build a document indexing service as the first step. Since this is a demo, I am going to use the in-memory vector database that Haystack offers. Please note that each document in our vector database contains,
+Since we have an RAG pipeline, we should build a document indexing service as the first step. For this demo, I am going to use the in-memory vector database that Haystack offers. Please note that each document in our vector database contains,
 
-- Content — which we use to perform similarity search
+- Content — Which we used to perform a similarity search
 - Id — Unique identifier
 - Price — Product price
 - URL — Product URL
+
+When our RAG pipeline is invoked, the Content field is used for vector search. All other fields are included as metadata. It’s crucial to preserve this metadata as it’s essential for front-end presentation to the user.
 
 Let’s see how we can implement that.
 
@@ -74,13 +76,13 @@ indexing_pipeline.connect("doc_embedder.documents", "doc_writer.documents")
 
 indexing_pipeline.run({"doc_embedder": {"documents": documents}})
 ```
-Great, we’ve completed the first step of our AI agent application. Now it’s time to build the product identifier tool. To better understand the main task of the product identifier, let’s consider example below.
+Great, we’ve completed the first step of our AI agent application. Now it’s time to build the product identifier tool. To better understand the primary task of the product identifier, let’s consider the example below.
 
 >User Query: I want to buy a camping boot, an charcoal and google pixel 9 back cover. Let’s understand our ideal workflow for product identifier function.
 
 ![Workflow of product_identifier_function](../Images/ai-agents//flow1.webp)
 
-First, we need to create tool for analyse user query and identify user interested products. We can build such tool using below code snippets.
+First, we need to create a tool for analyzing user queries and identifying user-interested products. We can build such a tool using code snippets below.
 
 ## Building User Query Analyzer
 
@@ -108,7 +110,7 @@ product_identifier.add_component("llm", generator())
 product_identifier.connect("prompt_builder", "llm")
 ```
 
-Okay, now we have completed the half of our first function, now it’s time to complete function by adding RAG pipeline.
+Okay, now we have completed half of our first function, now it’s time to complete the function by adding the RAG pipeline.
 
 ![Workflow of product_identifier_function](../Images/ai-agents//flow2.webp)
 
@@ -148,11 +150,16 @@ rag_pipe.connect("retriever", "prompt_builder.documents")
 rag_pipe.connect("prompt_builder", "llm")
 ```
 
-After this stage, we have completed both RAG and Query Analyzer pipelines. Now it’s time to convert this into a tool. For that, we can use a regular function declaration as shown below. Here, creating a tool for the Agent is no different than creating a Python function. In case you have a question like
+After this stage, we have completed both RAG and Query Analyzer pipelines. Now it’s time to convert this into a tool. For that, we can use a regular function declaration, as shown below. Creating a tool for the Agent is just like creating a Python function. In case you have a question like,
 
 >How is it possible for the Agent to invoke this function?
 
-The answer is simple: by using a model-specific tool schema. We will implement that in a future step. For now, it’s time to create a wrapper function that uses both the query analyzer and RAG pipeline.
+The answer is straightforward: by leveraging a model-specific tool schema, which we plan to incorporate in a future step. For now, it’s time to create a wrapper function that uses both the query analyzer and RAG pipeline.
+
+Let’s clarify the objectives of this function.
+
+**Objective 1**: Identify all products the user is interested in and return them as a list.
+**Objective 2**: For each identified product, retrieve up to five products from the database along with their metadata.
 
 ## Finalizing Product Identifier Function
 
@@ -224,7 +231,7 @@ def find_budget_friendly_option(selected_product_details):
     return budget_friendly_options
 ```
 
-Alright, now we have the most critical part of this application, which is allowing the agent to use these functions when necessary. As we discussed earlier, this is made possible via a model-specific tool schema. So we have to find the tool schema specific for the selected model. Luckily, it’s mentioned in the Groq/Llama-3-Groq-70B-Tool-Use's model card here. Let's adapt that to our use case.
+Okay, let's focus on the most crucial aspect of this application, which is enabling the agent to use these functions as needed. As we previously talked about, this is achievable through a model-specific tool schema. Therefore, we need to locate the tool schema specific to the selected model. Fortunately, it's mentioned in the model card [here](https://huggingface.co/Groq/Llama-3-Groq-70B-Tool-Use). We need to adjust that to fit our use case.
 
 ## Finalizing Chat Template
 
@@ -340,6 +347,22 @@ available_functions = {
     }
 ```
 
+One thing you may have noticed in the above response is that the XML tag `<tool_call>` encloses tool calls. Thus, we need to develop a mechanism to extract the tool_call object.
+
+```python
+def extract_tool_calls(tool_calls_str):
+    json_objects = re.findall(r'<tool_call>(.*?)</tool_call>', tool_calls_str, re.DOTALL)
+    
+    result_list = [json.loads(obj) for obj in json_objects]
+    
+    return result_list
+
+available_functions = {
+    "product_identifier_func": product_identifier_func, 
+    "find_budget_friendly_option": find_budget_friendly_option
+    }
+```
+
 With this step completed, we can directly access the agent’s response when it calls a tool. Now the only thing pending is to get the tool call object and execute the function accordingly. Let’s complete that piece too.
 
 ```python
@@ -362,7 +385,7 @@ if response and "<tool_call>" in response["replies"][0].content:
         response = chat_generator.run(messages=messages)
 ```
 
-Now it’s time to join each component together and build proper chat application. I am going to use gradio for that purpose.
+Now it’s time to join each component together and build a proper chat application. I am going to use Gradio for that purpose.
 
 ```python
 import gradio as gr
@@ -420,8 +443,15 @@ demo.launch()
 
 That’s it! We have built the Llama 3-based AI Agent 🤖 with function calling capability. You can access the full code from this [GitHub repo](https://github.com/Ransaka/ai-agents-with-llama3). Thanks for reading.
 
-The dataset used in this article can be accessed via this [Kaggle link](https://www.kaggle.com/datasets/promptcloud/amazon-product-dataset-2020). The dataset is licensed under CC0: Public Domain.
+Access to the dataset used in this article is available through this [Kaggle link](https://www.kaggle.com/datasets/promptcloud/amazon-product-dataset-2020) (Under CC0: Public Domain).
 
 ## Conclusion
 
-When building an AI agent-based system, it’s worth noting the time taken to finish a task and the number of API calls (tokens) used to complete a single task. Furthermore, reducing hallucinations is the biggest challenge for us to tackle, and it is an active research area as well. Hence, there is no rule of thumb for use in LLM and agent system building. So, you have to work patiently and tactically to get the AI agent, or in other words, the LLM, on the right track.
+When constructing an AI agent-based system, it's important to consider the time required to complete a task and the number of API calls (tokens) used for each task. One of the major challenges is reducing hallucination in the system, which is an active area of research. Therefore, there are no set rules for building LLMs and agent systems. It's necessary to work patiently and strategically to ensure the AI agent, the LLM, is functioning correctly.
+
+_All images, unless otherwise noted, are by the author._
+
+## Reference:
+- [Introducing Llama 3.1: Our most capable models to date](https://ai.meta.com/blog/meta-llama-3-1/?source=post_page-----7e74f79d1ccc--------------------------------)
+- [Groq's `Llama-3-Groq-70B-Tool-Use` model](https://huggingface.co/Groq/Llama-3-Groq-70B-Tool-Use)
+- [Llama 3 function calling](https://medium.com/p/7e74f79d1ccc#:~:text=https%3A//docs.together.ai/docs/llama%2D3%2Dfunction%2Dcalling)
