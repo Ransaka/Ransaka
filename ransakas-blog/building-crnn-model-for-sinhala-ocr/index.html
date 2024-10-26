@@ -6,7 +6,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.6.0.783247831266">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.6.0.783248211585">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.6.0">
@@ -35,12 +35,12 @@
 
     <script data-cfasync="false">(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=3.6.0.783247831266" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.6.0.783248211585" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.6.0.783247831266" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.6.0.783248211585" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.6.0.783247831266" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.6.0.783247831266" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.6.0.783248211585" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.6.0.783248211585" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -198,13 +198,13 @@
 <p>It&#x27;s pretty simple, right? All you need to know is to scan the image with your eyes. Once you understand the first character, you shift right (or left, depending on the language). You continue this process until you reach the end of the image. This is exactly what CRNNs do under the hood. The only difference is that you&#x27;ve trained to do this throughout your life, unlike these models, which only have a few days to achieve the same results. ¯/<em>(ツ)</em>/¯</p>
 <p>But there is a tiny difference. We humans can understand a character at first glance.</p>
 <p><figure class="content-center">
-    <img src="../images/crnn-sinhala/screenshot202024-10-2620at2013.15.04.png" alt="Fig 1">
+    <img src="../../images/crnn-sinhala/fig1.png" alt="Fig 1">
     <figcaption class="caption">Fig 1</figcaption>
 </figure>
 </p>
 <p>On the other hand, machines are quite incapable of this as they are limited by capturing only spatial representation, the amount of data they can access at certain points and, more importantly, the nature of data we put in. Intuitively, if we need to build a system capable of predicting corresponding text in certain regions, we should have a properly annotated dataset. One possibility would be to create patches of images and assign characters to each, like this.</p>
 <p><figure class="content-center">
-    <img src="../images/crnn-sinhala/screenshot202024-10-2620at2013.15.24.png" alt="Fig 2 Map different image patches to a label">
+    <img src="../../images/crnn-sinhala/fig2.png" alt="Fig 2 Map different image patches to a label">
     <figcaption class="caption">Fig 2 Map different image patches to a label</figcaption>
 </figure>
 </p>
@@ -239,7 +239,7 @@ I&#x27;m using <a href="https://huggingface.co/datasets/Ransaka/SSOCR-V.1">this<
 <p><a href="https://stats.stackexchange.com/questions/291820/what-is-the-definition-of-a-feature-map-aka-activation-map-in-a-convolutio">Feature maps</a> are the product of CNN. When the image passes through convolution and pooling layers, it transforms into several feature maps. Each convolution layer applies a different filter, and when we perform this for multiple layers, we have a very abstract view of the input image. A pooling layer is also applied between convolution layers to retain the most usable feature. This will reduce the resulting feature map dimension. Ultimately, the resulting feature maps can be considered feature-rich and efficient  representations of the input image. Due to dimensionality reduction, a small area in a resulting feature map corresponds to a larger area in the input image. We call that receptive field. Nevertheless, to understand feature maps in the context of CRNN, all you need to know is that feature maps have very specialized representations of input features, which we transform as feature vectors.</p>
 <p>Let&#x27;s assume we have a 61 x 157 image. Our model comprises two convolution and max pooling layers with a kernel size of 2 x 2 and stride as 1. If we do <a href="https://stackoverflow.com/questions/34739151/calculate-dimension-of-feature-maps-in-convolutional-neural-network">the math</a>, the resulting feature maps will take the below shapes.</p>
 <p><figure class="content-center">
-    <img src="../images/crnn-sinhala/screenshot202024-10-2620at2013.15.50.png" alt="Fig 3: Annotated image and feature maps">
+    <img src="../../images/crnn-sinhala/annotated_fms.png" alt="Fig 3: Annotated image and feature maps">
     <figcaption class="caption">Fig 3: Annotated image and feature maps</figcaption>
 </figure>
 </p>
@@ -255,7 +255,7 @@ I&#x27;m using <a href="https://huggingface.co/datasets/Ransaka/SSOCR-V.1">this<
 </blockquote>
 <p>This means that for each feature map, pick a one-pixel-wide column. The resulting vector is 16 x 1 for a single feature map. Since we have 128 feature maps, the final feature vector corresponding to the first image patch will be 128 x 16. This vector will then be fed into RNN at time step t. Likewise, we can perform this until the end of our sequence. One advantage here is that RNNs can unroll into any required sequence length. Therefore, we are not limited by image width but by image height. One more advancement researchers made in the original paper was using bi-directional LSTM instead of vanilla LSTM. This allows the feature vector at the t step to communicate with the feature vector at the <em>t-k</em> and <em>t+k</em> time steps, where <em>k&gt;0</em>. Generally, this works well as it&#x27;s obvious to make predictions based on important feature vectors in both directions.</p>
 <p><figure class="content-center">
-    <img src="../images/crnn-sinhala/screenshot202024-10-1920at2008.38.50.png" alt="Fig 4: Model architecture from original paper">
+    <img src="../../images/crnn-sinhala/original_architecture.png" alt="Fig 4: Model architecture from original paper">
     <figcaption class="caption">Fig 4: Model architecture from original paper</figcaption>
 </figure>
 </p>
