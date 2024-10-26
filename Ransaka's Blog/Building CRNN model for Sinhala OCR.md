@@ -15,11 +15,11 @@ It's pretty simple, right? All you need to know is to scan the image with your e
 
 But there is a tiny difference. We humans can understand a character at first glance.
 
-![Fig 1](../Images/crnn-sinhala/Screenshot%202024-10-26%20at%2013.15.04.png)
+![Fig 1](../Images/crnn-sinhala/fig1.png)
 
 On the other hand, machines are quite incapable of this as they are limited by capturing only spatial representation, the amount of data they can access at certain points and, more importantly, the nature of data we put in. Intuitively, if we need to build a system capable of predicting corresponding text in certain regions, we should have a properly annotated dataset. One possibility would be to create patches of images and assign characters to each, like this.
 
-![Fig 2 Map different image patches to a label](../Images/crnn-sinhala/Screenshot%202024-10-26%20at%2013.15.24.png)
+![Fig 2 Map different image patches to a label](../Images/crnn-sinhala/fig2.png)
 
 In practice, creating this kind of dataset requires some serious manpower and careful annotations. But we can do the trick; what if we allow a CNN model to self-create these patches and then label each patch based on its spatial representation? That might work, isn't it? But again, an obstacle: If you check the above image, you will notice that you need both the first and second patches to predict _S_. The same goes with E and C above. Therefore, we will predict the current label based on information from previous patches and the current patch itself. In other words, it's sequence modelling. And that's where RNN comes in here. 
 So far in the explanation, you have probably noted how we transitioned this OCR task into CNN and RNN. More intuitively, that is why they called this CRNN. It has tackled the OCR problem using a combination of CNN and RNN. CNN to learn spatial features in the image, then pass into RNN to detect the relationship between patches(feature maps) and produce the final output. 
@@ -41,7 +41,7 @@ Perhaps you needed clarification on these three, as I often used them in the exp
 
 Let's assume we have a 61 x 157 image. Our model comprises two convolution and max pooling layers with a kernel size of 2 x 2 and stride as 1. If we do [the math](https://stackoverflow.com/questions/34739151/calculate-dimension-of-feature-maps-in-convolutional-neural-network), the resulting feature maps will take the below shapes.
 
-![Fig 3: Annotated image and feature maps](../Images/crnn-sinhala/Screenshot%202024-10-26%20at%2013.15.50.png)
+![Fig 3: Annotated image and feature maps](../Images/crnn-sinhala//annotated_fms.png)
 
 ## Feature vectors
 
@@ -50,7 +50,7 @@ According to a research paper, this is the definition of the feature vector.
 
 This means that for each feature map, pick a one-pixel-wide column. The resulting vector is 16 x 1 for a single feature map. Since we have 128 feature maps, the final feature vector corresponding to the first image patch will be 128 x 16. This vector will then be fed into RNN at time step t. Likewise, we can perform this until the end of our sequence. One advantage here is that RNNs can unroll into any required sequence length. Therefore, we are not limited by image width but by image height. One more advancement researchers made in the original paper was using bi-directional LSTM instead of vanilla LSTM. This allows the feature vector at the t step to communicate with the feature vector at the _t-k_ and _t+k_ time steps, where _k>0_. Generally, this works well as it's obvious to make predictions based on important feature vectors in both directions.
 
-![Fig 4: Model architecture from original paper](../Images/crnn-sinhala/Screenshot%202024-10-19%20at%2008.38.50.png)
+![Fig 4: Model architecture from original paper](../Images/crnn-sinhala/original_architecture.png)
 
 ## Coding CRNN architecture
 
