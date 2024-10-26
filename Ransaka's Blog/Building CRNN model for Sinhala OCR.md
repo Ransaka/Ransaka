@@ -420,7 +420,7 @@ Due to the dataset's simplicity, the model converges without any struggle.
 
 ## Closing thoughts
 
-Even though the above model performed well on training data, its real-world performance is awful. This is due to several reasons: a less sophisticated dataset and a more basic model architecture (skipped batch and dropout layers). I purposely removed the in-depth explanation of CTC loss and its usefulness to make the reader more focused on the CRNN model, especially the RNN part. If you want to read more about it, I recommend this article.
+Even though the above model performed well on training data, its real-world performance is awful. This is due to several reasons: a less sophisticated dataset and a more basic model architecture (skipped batch and dropout layers). I purposely removed the in-depth explanation of CTC loss and its usefulness to make the reader more focused on the CRNN model, especially the RNN part. If you want to read more about it, I recommend [this](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://distill.pub/2017/ctc&ved=2ahUKEwjVv4Oe76uJAxUsUGwGHUMgKckQFnoECDQQAQ&usg=AOvVaw1xafucYnDRj_X48eOFZSHE) article.
 
 You can access the model via [this hf space](https://huggingface.co/spaces/Ransaka/OCR-CRNN).
 
