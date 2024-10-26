@@ -4,10 +4,10 @@
 
 ## Opening thoughts
 
-If you're reading this article, you likely have different interests than the majority. It's rare to find someone wanting to build a CRNN model in this era of LLM hype, which makes this quite refreshing. Next, I want to share my motivation behind this article. However, if you feel that's unnecessary, you can directly jump into this section. So, my motivation behind this article(possibly an article series) is making people want to play around with RNNs. For me, RNNs are the pioneers in this sequence modelling before transformers come into play. Most concepts we are now trying out with transformers have [evolved from RNNs](https://medium.com/r/?url=https%3A%2F%2Farxiv.org%2Fpdf%2F1409.0473). Therefore, I believe these concepts with RNNs make much more sense than those with more complex and heavy-weight transformer architecture. As per this thought process, I decided to go ahead with it. While I learn these, I am using these articles to digest these concepts better. Alright, enough talking. Let's jump into the actual article.
+If you're reading this article, you likely have different interests than the majority. It's rare to find someone wanting to build a CRNN model in this era of LLM hype, which makes this quite refreshing. Next, I want to share my motivation behind this article. However, if you feel that's unnecessary, you can directly jump into [this section](#understanding-crnn). So, my motivation behind this article(possibly an article series) is making people want to play around with RNNs. RNNs are the pioneers in this sequence modelling before transformers come into play. Most concepts we are now trying out with transformers have [evolved from RNNs](https://arxiv.org/pdf/1409.0473). Therefore, I believe these concepts with RNNs make much more sense than those with more complex and heavy-weight transformer architecture. As per this thought process, I decided to go ahead with it. While I learn these, I am using these articles to digest these concepts better. Alright, enough talking. Let's jump into the actual article.
 
 ## Understanding CRNN
-CRNN (Convolutional Recurrent Neural Network) was first proposed in the paper An End-to-End Trainable Neural Network for Image-based Sequence Recognition and Its Application to Scene Text Recognition. As the name implies, the architecture comprises a convolutional neural network with an RNN model. But how? Let me explain. First, forget about these terms: RNNs, CNNs, etc. How would you do that if you were supposed to read the text in the image below?
+CRNN (Convolutional Recurrent Neural Network) was first proposed in the paper _An End-to-End Trainable Neural Network for Image-based Sequence Recognition and Its Application to Scene Text Recognition_. As the name implies, the architecture comprises a convolutional neural network with an RNN model. But how? Let me explain. First, forget about these terms: RNNs, CNNs, etc. How would you do that if you were supposed to read the text in the image below?
 
 ![Sample Image via MJSynth](../Images/crnn-sinhala/1_vbZnZ8QjXscuKuL6ZAK55g.png)
 
@@ -15,26 +15,17 @@ It's pretty simple, right? All you need to know is to scan the image with your e
 
 But there is a tiny difference. We humans can understand a character at first glance.
 
-<figure style="text-align: center">
-  <img src="../Images/crnn-sinhala/Screenshot%202024-10-26%20at%2013.15.04.png" alt="Trulli" style="width:60%; margin: auto; display: block">
-  <figcaption style="text-align: center">Fig 1</figcaption>
-</figure>
+![Fig 1](../Images/crnn-sinhala/Screenshot%202024-10-26%20at%2013.15.04.png)
 
 On the other hand, machines are quite incapable of this as they are limited by capturing only spatial representation, the amount of data they can access at certain points and, more importantly, the nature of data we put in. Intuitively, if we need to build a system capable of predicting corresponding text in certain regions, we should have a properly annotated dataset. One possibility would be to create patches of images and assign characters to each, like this.
 
-<figure style="text-align: center">
-  <img src="../Images/crnn-sinhala/Screenshot 2024-10-26 at 13.15.24.png" alt="Trulli" style="width:60%; margin: auto; display: block">
-  <figcaption style="text-align: center">Fig 2: Map different feature maps to a label</figcaption>
-</figure>
+![Fig 2 Map different image patches to a label](../Images/crnn-sinhala/Screenshot%202024-10-26%20at%2013.15.24.png)
 
-In practice, creating this kind of dataset requires some serious manpower and careful annotations. But we can do the trick; what if we allow a CNN model to self-create these patches and then label each patch based on its spatial representation? That might work, isn't it? But again, an obstacle: If you check the above image, you will notice that you need both the first and second patches to predict S. The same goes with E and C above. Therefore, we will predict the current label based on information from previous patches and the current patch itself. In other words, it's sequence modelling. And that's where RNN comes in here. 
+In practice, creating this kind of dataset requires some serious manpower and careful annotations. But we can do the trick; what if we allow a CNN model to self-create these patches and then label each patch based on its spatial representation? That might work, isn't it? But again, an obstacle: If you check the above image, you will notice that you need both the first and second patches to predict _S_. The same goes with E and C above. Therefore, we will predict the current label based on information from previous patches and the current patch itself. In other words, it's sequence modelling. And that's where RNN comes in here. 
 So far in the explanation, you have probably noted how we transitioned this OCR task into CNN and RNN. More intuitively, that is why they called this CRNN. It has tackled the OCR problem using a combination of CNN and RNN. CNN to learn spatial features in the image, then pass into RNN to detect the relationship between patches(feature maps) and produce the final output. 
 I'm using [this](https://huggingface.co/datasets/Ransaka/SSOCR-V.1) dataset in the later part of this article. It contains synthetic images suitable for OCR tasks. You can access the generation script in [this code repository](https://github.com/Ransaka/rnn-playground/tree/main/rnn-for-sinhala-ocr). Furthermore, all codes related to this article can be accessed from the same GitHub repository.
 
-<figure style="text-align: center">
-  <img src="../Images/crnn-sinhala/1_0nDcaBArP3ywWpwCjjy_sg.png" alt="Trulli" style="width:60%; margin: auto; display: block">
-  <figcaption style="text-align: center">SSOCR Dataset</figcaption>
-</figure>
+![SSOCR Dataset](../Images/crnn-sinhala/1_0nDcaBArP3ywWpwCjjy_sg.png)
 
 ## More detailed explanation about the model architecture.
 
@@ -42,7 +33,7 @@ As initially discussed, it has two components: CNN and RNN. However, the origina
 
 ## Feature vectors, feature maps and image patches
 
-Perhaps you needed clarification on these three, as I often used them in the explanation. Here's the explanation. Image patches are horizontal, vertical, or a combination of both image segments, as shown in Fig. That has nothing to do with this CRNN model. I only used it in the article to get the reader used to the concept of CRNN. However, feature maps and feature vectors deserve more explanation because they are major components of CRNN architecture.
+Perhaps you needed clarification on these three, as I often used them in the explanation. Here's the explanation. Image patches are horizontal or vertical (or a combination of both) image segments, as shown in Fig. That has nothing to do with this CRNN model. I only used it in the article to get the reader used to the concept of CRNN. However, feature maps and feature vectors deserve more explanation because they are major components of CRNN architecture.
 
 ## Feature maps
 
@@ -50,29 +41,23 @@ Perhaps you needed clarification on these three, as I often used them in the exp
 
 Let's assume we have a 61 x 157 image. Our model comprises two convolution and max pooling layers with a kernel size of 2 x 2 and stride as 1. If we do [the math](https://stackoverflow.com/questions/34739151/calculate-dimension-of-feature-maps-in-convolutional-neural-network), the resulting feature maps will take the below shapes.
 
-<figure style="text-align: center">
-  <img src="../Images/crnn-sinhala/Screenshot 2024-10-26 at 13.15.50.png" alt="Trulli" style="width:80%; margin: auto; display: block">
-  <figcaption style="text-align: center">Fig 3: Annotated image and feature maps</figcaption>
-</figure>
+![Fig 3: Annotated image and feature maps](../Images/crnn-sinhala/Screenshot%202024-10-26%20at%2013.15.50.png)
 
 ## Feature vectors
 
 According to a research paper, this is the definition of the feature vector.
 >Each feature vector of a feature sequence is generated from left to right on the feature maps by column. This means the i-th feature vector is the concatenation of the i-th columns of all the maps. The width of each column in our settings is fixed to single pixel.
 
-This means that for each feature map, pick a one-pixel-wide column. The resulting vector is 16 x 1 for a single feature map. Since we have 128 feature maps, the final feature vector corresponding to the first image patch will be 128 x 16. This vector will then be fed into RNN at time step t. Likewise, we can perform this until the end of our sequence. One advantage here is that RNNs can unroll into any required sequence length. Therefore, we are not limited by image width but by image height. One more advancement researchers made in the original paper was using bi-directional LSTM instead of vanilla LSTM. This allows the feature vector at the t step to communicate with the feature vector at the t-k and t+k time steps, where k>0. Generally, this works well as it's obvious to make predictions based on important feature vectors in both directions.
+This means that for each feature map, pick a one-pixel-wide column. The resulting vector is 16 x 1 for a single feature map. Since we have 128 feature maps, the final feature vector corresponding to the first image patch will be 128 x 16. This vector will then be fed into RNN at time step t. Likewise, we can perform this until the end of our sequence. One advantage here is that RNNs can unroll into any required sequence length. Therefore, we are not limited by image width but by image height. One more advancement researchers made in the original paper was using bi-directional LSTM instead of vanilla LSTM. This allows the feature vector at the t step to communicate with the feature vector at the _t-k_ and _t+k_ time steps, where _k>0_. Generally, this works well as it's obvious to make predictions based on important feature vectors in both directions.
 
-<figure style="text-align: center">
-  <img src="../Images/crnn-sinhala/Screenshot 2024-10-19 at 08.38.50.png" alt="Trulli" style="width:70%; margin: auto; display: block">
-  <figcaption style="text-align: center">Fig 4: Model architecture from original paper</figcaption>
-</figure>
+![Fig 4: Model architecture from original paper](../Images/crnn-sinhala/Screenshot%202024-10-19%20at%2008.38.50.png)
 
 ## Coding CRNN architecture
 
 > [!WARNING]  
 > Since we are working on a relatively simple dataset, I am doing a few simplifications on top of the original model.
 
-To make the architecture simple and intuitive, I only added two convolutions with max pooling for the CNN feature extractor and a bidirectional LSTM layer. For each timestamp, the RNN + Fully connected layer will generate a probability distribution for all characters in the vocabulary. Once we have the probability distribution, we can pick a character with maximum probability. We need to use some loss for model training to evaluate the model and update the parameters. Unfortunately, we cannot calculate negative log-likelihood for this type of work, as we don't have the desired characters for each feature vector (or timestamp). Therefore, our best bet would be to use some loss function to support unaligned input and outputs, such as CTC loss.
+To make the architecture simple and intuitive, I only added two convolutions with max pooling for the CNN feature extractor, a bidirectional LSTM layer for sequence modelling and a fully connected layer. For each timestamp, the RNN + Fully connected layer will generate a probability distribution for all characters in the vocabulary. Once we have the probability distribution, we can pick a character with maximum probability. However, we must use the loss function during model training to update the parameters. Unfortunately, like language modelling, we cannot calculate negative log-likelihood (or similar) loss for this type of work, as we don't have the desired characters for each feature vector (or timestamp). Therefore, our best bet would be to use some loss function which supports unaligned input and outputs, such as CTC loss.
 
 ## Model using PyTorch
 
@@ -231,10 +216,7 @@ def collate_fn(batch):
 
 For example, I have added some random transformations for training data.
 
-<figure style="text-align: center">
-  <img src="../Images/crnn-sinhala/transfomerms2.png" alt="Trulli" style="width:30%; margin: auto; display: block">
-  <figcaption style="text-align: center">Example Transformation</figcaption>
-</figure>
+![Example Transformation](../Images/crnn-sinhala/transfomerms2.png)
 
 ## Model training
 
@@ -434,16 +416,15 @@ if __name__ == "__main__":
 
 Due to the dataset's simplicity, the model converges without any struggle.
 
-<figure style="text-align: center">
-  <img src="../Images/crnn-sinhala/loss.png" alt="Trulli" style="width:80%; margin: auto; display: block">
-  <figcaption style="text-align: center">Train and Validation Losses</figcaption>
-</figure>
+![Train and Validation Losses](../Images/crnn-sinhala/loss.png)
 
 ## Closing thoughts
 
 Even though the above model performed well on training data, its real-world performance is awful. This is due to several reasons: a less sophisticated dataset and a more basic model architecture (skipped batch and dropout layers). I purposely removed the in-depth explanation of CTC loss and its usefulness to make the reader more focused on the CRNN model, especially the RNN part. If you want to read more about it, I recommend this article.
 
-Some references I found useful
+You can access the model via [this hf space](https://huggingface.co/spaces/Ransaka/OCR-CRNN).
+
+Some references I found useful,
 
 1. https://colah.github.io/posts/2015-08-Understanding-LSTMs/
 2. https://stats.stackexchange.com/questions/291820/what-is-the-definition-of-a-feature-map-aka-activation-map-in-a-convolutio
