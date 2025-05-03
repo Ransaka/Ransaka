@@ -11,3 +11,5 @@ footer:
 integrations:
   googleAnalytics:
     id: G-RVTWV1VZXC
+  katex:
+    enabled: true
